@@ -31,12 +31,12 @@ async def reload_error(ctx, error):
     else:
         await ctx.send(f"{ctx.author.mention}  **ERROR:** Reloading failed")
 
-
+'''
 # Catch Command Errors
 @client.event
 async def on_command_error(ctx, error):
     pass
-
+'''
 
 # Start
 for filename in os.listdir("./COGS"):
