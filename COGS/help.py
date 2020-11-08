@@ -20,7 +20,7 @@ class Help(commands.Cog):
             helpEmbed = discord.Embed(description="**In Development:** Only commands with `this highlight` are working", colour=0X2072AA)
         # Club Activities
         elif command == "profile":
-            helpEmbed = discord.Embed(description="**In Development:** Only commands with `this highlight` are working", colour=0X2072AA)
+            helpEmbed = discord.Embed(description="IN PROGRESS", colour=0X2072AA)
         elif command == "meetings":
             helpEmbed = discord.Embed(description="**In Development:** Only commands with `this highlight` are working", colour=0X2072AA)
         elif command == "kudos":
