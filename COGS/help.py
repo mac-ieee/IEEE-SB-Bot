@@ -66,15 +66,15 @@ class Help(commands.Cog):
         else:
             command = "IEEE McMaster SB Bot Commands"
             helpEmbed = discord.Embed(colour=0X2072AA)
-            helpEmbed.add_field(name="Info  :scroll:", value="`rules`, `register`, `committees`, `execteam`",
+            helpEmbed.add_field(name="Info  :scroll:", value="`rules`, `register`, committees, execteam",
                                 inline=False)
             helpEmbed.add_field(name="Club Activities  <:fireball:766987229713006619>",
-                                value="`profile`, `meetings`, games",
+                                value="`profile`, meetings, games",
                                 inline=False)
-            helpEmbed.add_field(name="Utilities  :tools:", value="`ping`, `clear`, `reminders`, `polls`", inline=False)
+            helpEmbed.add_field(name="Utilities  :tools:", value="`ping`, `clear`, reminders, polls", inline=False)
             helpEmbed.add_field(name="Moderation  :oncoming_police_car:",
-                                value="`kick`, `ban`, `unban`, `banlist`, `mute`, `unmute`, `antiswear`", inline=False)
-            helpEmbed.add_field(name="Settings  :gear:", value="`changecmdprefix`, changeavatar, changestatus",
+                                value="kick, ban, unban, banlist, mute, unmute, antiswear", inline=False)
+            helpEmbed.add_field(name="Settings  :gear:", value="changecmdprefix, changeavatar, changestatus",
                                 inline=False)
             helpEmbed.set_footer(text="For additional information, use -help <command>")
         helpEmbed.set_author(name=f"Help: {command}")
