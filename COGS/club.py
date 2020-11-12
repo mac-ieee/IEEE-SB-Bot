@@ -24,22 +24,36 @@ class ClubActivities(commands.Cog):
                         names = await info.set_name(ctx, users, ctx.author)
                         users[str(ctx.author.id)]["First Name"] = names[0]
                         users[str(ctx.author.id)]["Last Name"] = names[1]
+                        with open("users.json", "w") as file:
+                            json.dump(users, file)
+                        await ctx.send(
+                            f"{ctx.author.mention}, your profile has been updated successfully!")
                     elif data == "email":
                         users[str(ctx.author.id)]["Email"] = await info.set_email(ctx, users, ctx.author)
+                        with open("users.json", "w") as file:
+                            json.dump(users, file)
+                        await ctx.send(
+                            f"{ctx.author.mention}, your profile has been updated successfully!")
                     elif data == "program":
                         users[str(ctx.author.id)]["Program"] = await info.set_program(ctx, users, ctx.author)
+                        with open("users.json", "w") as file:
+                            json.dump(users, file)
+                        await ctx.send(
+                            f"{ctx.author.mention}, your profile has been updated successfully!")
                     elif data == "year":
                         users[str(ctx.author.id)]["Year"] = await info.set_year(ctx, users, ctx.author)
+                        with open("users.json", "w") as file:
+                            json.dump(users, file)
+                        await ctx.send(
+                            f"{ctx.author.mention}, your profile has been updated successfully!")
+                    else:
+                        await ctx.send(
+                            f"{ctx.author.mention}, what are you exactly trying to edit?")
                 except asyncio.TimeoutError:
                     return await ctx.send(
                         f"Sorry {ctx.author.mention}, you took to long to respond. Command Terminated.")
                 except ForcedInteruptError:
                     return await ctx.send(f"{ctx.author.mention} terminated the command")
-
-                with open("users.json", "w") as file:
-                    json.dump(users, file)
-                await ctx.send(
-                    f"{ctx.author.mention}, your profile has been updated successfully!")
             else:
                 name = users[str(ctx.author.id)]["First Name"] + " " + users[str(ctx.author.id)]["Last Name"]
                 profile_embed = discord.Embed(title=users[str(ctx.author.id)]['Title'], colour=0X2072AA)

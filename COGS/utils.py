@@ -10,9 +10,9 @@ class Utilities(commands.Cog):
     # Ping
     @commands.command()
     async def ping(self, ctx):
-        pingEmbed = discord.Embed(colour=0X2072AA)
+        pingEmbed = discord.Embed(title="Ping", colour=0X2072AA)
         pingEmbed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-        pingEmbed.add_field(name="Ping:", value=f"Pong! {round(self.client.latency * 1000)}ms  :ping_pong:")
+        pingEmbed.add_field(name="Pong!", value=f"Latency: {round(self.client.latency * 1000)}ms  :ping_pong:")
         await ctx.send(embed=pingEmbed)
 
     # Clear

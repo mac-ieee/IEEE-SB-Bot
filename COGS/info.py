@@ -19,14 +19,16 @@ class Info(commands.Cog):
             name_response = name_response.content.strip().split(" ")
             if not (name_response[0] + name_response[1]).isalpha():
                 raise InvalidNameError
+            if user.id != ctx.guild.owner_id:
+                await user.edit(nick=name_response[0])
             return name_response
         except InvalidNameError:
             await ctx.send(
                 f"Sorry {user.mention}, names can only consist of letters. Please try again")
-            await self.set_name(ctx, users, user)
+            return await self.set_name(ctx, users, user)
         except IndexError:
             await ctx.send(f"Sorry {user.mention}, we need your last name as well. Please try again")
-            await self.set_name(ctx, users, user)
+            return await self.set_name(ctx, users, user)
 
     async def set_email(self, ctx, users, user):
         try:
@@ -41,7 +43,7 @@ class Info(commands.Cog):
             return email_response
         except InvalidEmailError:
             await ctx.send(f"Sorry {user.mention}, we can't use that email address. Please try again")
-            await self.set_email(ctx, users, user)
+            return await self.set_email(ctx, users, user)
 
     async def set_program(self, ctx, users, user):
         try:
@@ -57,7 +59,7 @@ class Info(commands.Cog):
         except InvalidProgramError:
             await ctx.send(
                 f"Sorry {user.mention}, program names can only use letter. Please try again")
-            await self.set_program(ctx, users, user)
+            return await self.set_program(ctx, users, user)
 
     async def set_year(self, ctx, users, user):
         try:
@@ -70,7 +72,7 @@ class Info(commands.Cog):
             return int(year_response)
         except ValueError:
             await ctx.send(f"Sorry {user.mention}, we were expecting a number. Please try again")
-            await self.set_year(ctx, users, user)
+            return await self.set_year(ctx, users, user)
 
     @commands.command()
     async def rules(self, ctx):
@@ -108,17 +110,125 @@ class Info(commands.Cog):
                 json.dump(users, file)
             await ctx.send(
                 f"{ctx.author.mention} has successfully registered")
-            # Avoid error: Bot cannot override server owner's permissions,
-            if ctx.author.id != ctx.guild.owner_id:
-                await ctx.author.edit(nick=users[ctx.author.id]["First Name"])
-            else:
-                await ctx.send(
-                    f"Server owners must change their own nickname")
-                
-    @commands.command()
-    async def committees(self, ctx, sumfuk):
-        pass
 
+    @commands.command()
+    async def kill(self, ctx, victim: discord.User = None):
+        if victim:
+            await ctx.send(f"{ctx.author.mention} killed {victim.mention}")
+        else:
+            await ctx.send(f"{ctx.author.mention} killed themself")
+
+    @commands.command()
+    async def test(self, ctx):
+        print(ctx.author.nick)
+
+    @commands.command(aliases=["chaps"])
+    async def chapters(self, ctx, chaps=None):
+        role = False
+        # Chapters
+        if chaps == "computer":
+            chaps_embed = discord.Embed(title="Computer Chapter", colour=0X2072AA)
+            chaps_embed.add_field(name="Description:", value=f"<text>", inline=False)
+            chaps_embed.add_field(name="Members:", value=f"<text>", inline=False)
+            chaps_embed.set_footer(text="To join Computer Chapter, type join")
+            role = discord.utils.get(ctx.guild.roles, name="Computer Chapter")
+        elif chaps == "embs":
+            chaps_embed = discord.Embed(title="EMBS Chapter", colour=0X2072AA)
+            chaps_embed.add_field(name="Description:", value=f"<text>", inline=False)
+            chaps_embed.add_field(name="Members:", value=f"<text>", inline=False)
+            chaps_embed.set_footer(text="To join EMBS Chapter, type join")
+            role = discord.utils.get(ctx.guild.roles, name="EMBS Chapter")
+        elif chaps == "pes":
+            chaps_embed = discord.Embed(title="PES Chapter", colour=0X2072AA)
+            chaps_embed.add_field(name="Description:", value=f"<text>", inline=False)
+            chaps_embed.add_field(name="Members:", value=f"<text>", inline=False)
+            chaps_embed.set_footer(text="To join PES Chapter, type join")
+            role = discord.utils.get(ctx.guild.roles, name="PES Chapter")
+        else:
+            chaps_embed = discord.Embed(title="Chapters", colour=0X2072AA)
+            chaps_embed.add_field(name="Computer Chapter", value=f"**Desc.:** <text>", inline=False)
+            chaps_embed.add_field(name="EMBS Chapter", value=f"**Desc.:** <text>", inline=False)
+            chaps_embed.add_field(name="PES Chapter", value=f"**Desc.:** <text>", inline=False)
+        chaps_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=chaps_embed)
+        # Join Response
+        response = await self.client.wait_for("message", check=lambda message: message.author == ctx.author)
+        if response.content == "join" and role:
+            await ctx.send(f"{ctx.author.mention} has joined {role.mention}")
+            await ctx.author.add_roles(role)
+
+    @commands.command(aliases=["comms"])
+    async def committees(self, ctx, comms=None):
+        role = False
+        # Committees
+        if comms == "discord":
+            comms_embed = discord.Embed(title="Discord Committee", colour=0X2072AA)
+            comms_embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/776205209046482995.png?v=1")
+            comms_embed.add_field(name="Description:", value=f"<text>", inline=False)
+            comms_embed.add_field(name="Members:", value=f"<text>", inline=False)
+            comms_embed.set_footer(text="To join Discord Committee, type join")
+            role = discord.utils.get(ctx.guild.roles, name="Discord Committee")
+        elif comms == "social":
+            comms_embed = discord.Embed(title="Social Committee", colour=0X2072AA)
+            comms_embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/776205198371979325.png?v=1")
+            comms_embed.add_field(name="Description:", value=f"<text>", inline=False)
+            comms_embed.add_field(name="Members:", value=f"<text>", inline=False)
+            comms_embed.set_footer(text="To join Social Committee, type join")
+            role = discord.utils.get(ctx.guild.roles, name="Social Committee")
+        elif comms == "website":
+            comms_embed = discord.Embed(title="Website Committee", colour=0X2072AA)
+            comms_embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/776205187349086290.png?v=1")
+            comms_embed.add_field(name="Description:", value=f"<text>", inline=False)
+            comms_embed.add_field(name="Members:", value=f"<text>", inline=False)
+            comms_embed.set_footer(text="To join Website Committee, type join")
+            role = discord.utils.get(ctx.guild.roles, name="Website Committee")
+        elif comms == "workshop":
+            comms_embed = discord.Embed(title="Workshop Committee", colour=0X2072AA)
+            comms_embed.set_thumbnail(url="https://cdn.discordapp.com/emojis/776205171130368061.png?v=1")
+            comms_embed.add_field(name="Description:", value=f"<text>", inline=False)
+            comms_embed.add_field(name="Members:", value=f"<text>", inline=False)
+            comms_embed.set_footer(text="To join Workshop Committee, type join")
+            role = discord.utils.get(ctx.guild.roles, name="Workshop Committee")
+        else:
+            comms_embed = discord.Embed(title="Committees", description="To join a committee, react with the appropriate emoji", colour=0X2072AA)
+            comms_embed.add_field(name="Discord Committee  <:discord:776205209046482995>", value=f"**Desc.:** <text>", inline=False)
+            comms_embed.add_field(name="Social Committee  <:social:776205198371979325>", value=f"**Desc.:** <text>", inline=False)
+            comms_embed.add_field(name="Website Committee  <:website:776205187349086290>", value=f"**Desc.:** <text>", inline=False)
+            comms_embed.add_field(name="Workshop Committee  <:workshop:776205171130368061>", value=f"**Desc.:** <text>", inline=False)
+            comms_embed.set_footer(text="To get committee members list, use -committees <commitee>")
+        comms_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        msg = await ctx.send(embed=comms_embed)
+
+        # Response
+        if role:
+            response = await self.client.wait_for("message", check=lambda message: message.author == ctx.author)
+            if response.content == "join":
+                await ctx.send(f"{ctx.author.mention} has joined {role.mention}")
+                await ctx.author.add_roles(role)
+        else:
+            await msg.add_reaction(emoji="discord:776205209046482995")
+            await msg.add_reaction(emoji="social:776205198371979325")
+            await msg.add_reaction(emoji="website:776205187349086290")
+            await msg.add_reaction(emoji="workshop:776205171130368061")
+            def check(reaction, user):
+                return user == ctx.author
+            reaction = await self.client.wait_for("reaction_add", check=check)
+            if "776205209046482995" in str(reaction):
+                role = discord.utils.get(ctx.guild.roles, name="Discord Committee")
+                await ctx.send(f"{ctx.author.mention} has joined {role.mention}")
+                await ctx.author.add_roles(role)
+            elif "776205198371979325" in str(reaction):
+                role = discord.utils.get(ctx.guild.roles, name="Social Committee")
+                await ctx.send(f"{ctx.author.mention} has joined {role.mention}")
+                await ctx.author.add_roles(role)
+            elif "776205187349086290" in str(reaction):
+                role = discord.utils.get(ctx.guild.roles, name="Website Committee")
+                await ctx.send(f"{ctx.author.mention} has joined {role.mention}")
+                await ctx.author.add_roles(role)
+            elif "776205171130368061" in str(reaction):
+                role = discord.utils.get(ctx.guild.roles, name="Workshop Committee")
+                await ctx.send(f"{ctx.author.mention} has joined {role.mention}")
+                await ctx.author.add_roles(role)
 
 def setup(client):
     client.add_cog(Info(client))
