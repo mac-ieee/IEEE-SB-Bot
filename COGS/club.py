@@ -10,71 +10,93 @@ class ClubActivities(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    async def get_profile(self, ctx, users, user):
+        name = users[str(user.id)]["First Name"] + " " + users[str(user.id)]["Last Name"]
+        profile_embed = discord.Embed(title=users[str(user.id)]['Title'],
+                                      description=users[str(user.id)]['Description'], colour=0X2072AA)
+        profile_embed.set_author(name=f"{user.name}'s Profile", icon_url=user.avatar_url)
+        profile_embed.set_thumbnail(url=user.avatar_url)
+        profile_embed.add_field(name="REGISTRATION INFO:",
+                                value=f"**Name:** {name}\n"
+                                      f"**Email:** {users[str(user.id)]['Email']}\n"
+                                      f"**Program:** {users[str(user.id)]['Program']}\n"
+                                      f"**Year:** {users[str(user.id)]['Year']}",
+                                inline=False)
+        profile_embed.add_field(name="CHAPTERS:",
+                                value=users[str(user.id)]['Chapters'], inline=True)
+        profile_embed.add_field(name="COMMITTEES:",
+                                value=users[str(user.id)]['Committees'], inline=True)
+        profile_embed.add_field(name="STATS:",
+                                value=f"**Offences:** {users[str(user.id)]['Offences']}\n"
+                                      f"**Level:** {users[str(user.id)]['Level']}\n"
+                                      f"**EXP:** {users[str(user.id)]['Experience']}\n"
+                                      f"**Coins:** {users[str(user.id)]['Coins']}",
+                                inline=False)
+        await ctx.send(embed=profile_embed)
+
     @commands.command(aliases=["p", "prof"])
-    async def profile(self, ctx, action=None, data=None):
+    async def profile(self, ctx, action="", data=None):
         os.chdir(r"C:\Users\Evan\Documents\GitHub\IEEE-SB-Bot")
         with open("users.json", "r") as file:
             users = json.load(file)
         info = Info(self.client)
 
-        if str(ctx.author.id) in users:
-            if action == "edit":
-                try:
-                    if data == "name":
-                        names = await info.set_name(ctx, users, ctx.author)
-                        users[str(ctx.author.id)]["First Name"] = names[0]
-                        users[str(ctx.author.id)]["Last Name"] = names[1]
-                        with open("users.json", "w") as file:
-                            json.dump(users, file)
-                        await ctx.send(
-                            f"{ctx.author.mention}, your profile has been updated successfully!")
-                    elif data == "email":
-                        users[str(ctx.author.id)]["Email"] = await info.set_email(ctx, users, ctx.author)
-                        with open("users.json", "w") as file:
-                            json.dump(users, file)
-                        await ctx.send(
-                            f"{ctx.author.mention}, your profile has been updated successfully!")
-                    elif data == "program":
-                        users[str(ctx.author.id)]["Program"] = await info.set_program(ctx, users, ctx.author)
-                        with open("users.json", "w") as file:
-                            json.dump(users, file)
-                        await ctx.send(
-                            f"{ctx.author.mention}, your profile has been updated successfully!")
-                    elif data == "year":
-                        users[str(ctx.author.id)]["Year"] = await info.set_year(ctx, users, ctx.author)
-                        with open("users.json", "w") as file:
-                            json.dump(users, file)
-                        await ctx.send(
-                            f"{ctx.author.mention}, your profile has been updated successfully!")
-                    else:
-                        await ctx.send(
-                            f"{ctx.author.mention}, what are you exactly trying to edit?")
-                except asyncio.TimeoutError:
-                    return await ctx.send(
-                        f"Sorry {ctx.author.mention}, you took to long to respond. Command Terminated.")
-                except ForcedInteruptError:
-                    return await ctx.send(f"{ctx.author.mention} terminated the command")
+        if action.startswith("<@!") and action.endswith(">"):
+            if action.lstrip("<@!").rstrip(">") in users:
+                user = self.client.get_user(int(action.lstrip("<@!").rstrip(">")))
+                await self.get_profile(ctx, users, user)
             else:
-                name = users[str(ctx.author.id)]["First Name"] + " " + users[str(ctx.author.id)]["Last Name"]
-                profile_embed = discord.Embed(title=users[str(ctx.author.id)]['Title'], colour=0X2072AA)
-                profile_embed.set_author(name=f"{ctx.author.name}'s Profile", icon_url=ctx.author.avatar_url)
-                profile_embed.set_thumbnail(url=ctx.author.avatar_url)
-                profile_embed.add_field(name="REGISTRATION INFO:",
-                                        value=f"**Name:** {name}\n"
-                                              f"**Email:** {users[str(ctx.author.id)]['Email']}\n"
-                                              f"**Program:** {users[str(ctx.author.id)]['Program']}\n"
-                                              f"**Year:** {users[str(ctx.author.id)]['Year']}",
-                                        inline=True)
-                profile_embed.add_field(name="COMMITTEES:",
-                                        value=users[str(ctx.author.id)]['Committees'], inline=True)
-                profile_embed.add_field(name="STATS:",
-                                        value=f"**Level:** {users[str(ctx.author.id)]['Level']}\n"
-                                              f"**EXP:** {users[str(ctx.author.id)]['Experience']}\n"
-                                              f"**Coins:** {users[str(ctx.author.id)]['Coins']}",
-                                        inline=False)
-                await ctx.send(embed=profile_embed)
+                await ctx.send(f"{ctx.author.mention}, this user hasn't registered yet.")
+        elif action == "edit" and str(ctx.author.id) in users:
+            try:
+                if data == "name":
+                    names = await info.set_name(ctx, users, ctx.author)
+                    users[str(ctx.author.id)]["First Name"] = names[0]
+                    users[str(ctx.author.id)]["Last Name"] = names[1]
+                    with open("users.json", "w") as file:
+                        json.dump(users, file, indent=4)
+                    await ctx.send(
+                        f"{ctx.author.mention}, your profile has been updated successfully!")
+                    await ctx.author.edit(nick=names[0])
+                elif data == "email":
+                    users[str(ctx.author.id)]["Email"] = await info.set_email(ctx, users, ctx.author)
+                    with open("users.json", "w") as file:
+                        json.dump(users, file, indent=4)
+                    await ctx.send(
+                        f"{ctx.author.mention}, your profile has been updated successfully!")
+                elif data == "program":
+                    users[str(ctx.author.id)]["Program"] = await info.set_program(ctx, users, ctx.author)
+                    with open("users.json", "w") as file:
+                        json.dump(users, file, indent=4)
+                    await ctx.send(
+                        f"{ctx.author.mention}, your profile has been updated successfully!")
+                elif data == "year":
+                    users[str(ctx.author.id)]["Year"] = await info.set_year(ctx, users, ctx.author)
+                    with open("users.json", "w") as file:
+                        json.dump(users, file, indent=4)
+                    await ctx.send(
+                        f"{ctx.author.mention}, your profile has been updated successfully!")
+                elif data == "description":
+                    users[str(ctx.author.id)]["Description"] = await info.set_desc(ctx, ctx.author)
+                    with open("users.json", "w") as file:
+                        json.dump(users, file, indent=4)
+                    await ctx.send(
+                        f"{ctx.author.mention}, your profile has been updated successfully!")
+                else:
+                    await ctx.send(
+                        f"{ctx.author.mention}, what are you exactly trying to edit?")
+            except asyncio.TimeoutError:
+                return await ctx.send(
+                    f"Sorry {ctx.author.mention}, you took to long to respond. Command Terminated.")
+            except ForcedInteruptError:
+                return await ctx.send(f"{ctx.author.mention} terminated the command")
+            except discord.Forbidden:
+                return await ctx.send("**ERROR:** Cannot change discord nickname! Permissions missing or too low!")
         else:
-            await ctx.send(f"Hey {ctx.author.mention}, you haven't registered yet! Type `-register` to get started")
+            if str(ctx.author.id) in users:
+                await self.get_profile(ctx, users, ctx.author)
+            else:
+                await ctx.send(f"Hey {ctx.author.mention}, you haven't registered yet! Type `-register` to get started")
 
 
 def setup(client):

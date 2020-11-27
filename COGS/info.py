@@ -14,13 +14,11 @@ class Info(commands.Cog):
             await ctx.send(f"{user.mention}, please enter your **first** and **last name**")
             name_response = await self.client.wait_for(
                 "message", check=lambda message: message.author == user, timeout=60)
-            if "stop" in name_response.content or "cancel" in name_response.content or "quit" in name_response.content:
+            if name_response.content == "stop" or name_response.content == "cancel" or name_response.content == "quit":
                 raise ForcedInteruptError
             name_response = name_response.content.strip().split(" ")
             if not (name_response[0] + name_response[1]).isalpha():
                 raise InvalidNameError
-            if user.id != ctx.guild.owner_id:
-                await user.edit(nick=name_response[0])
             return name_response
         except InvalidNameError:
             await ctx.send(
@@ -36,7 +34,7 @@ class Info(commands.Cog):
             email_response = await self.client.wait_for(
                 "message", check=lambda message: message.author == user, timeout=60)
             email_response = email_response.content.strip()
-            if "stop" in email_response or "cancel" in email_response or "quit" in email_response:
+            if email_response == "stop" or email_response == "cancel" or email_response == "quit":
                 raise ForcedInteruptError
             if not email_response.endswith("mcmaster.ca"):
                 raise InvalidEmailError
@@ -51,7 +49,7 @@ class Info(commands.Cog):
             program_response = await self.client.wait_for(
                 "message", check=lambda message: message.author == user, timeout=60)
             program_response = program_response.content.strip()
-            if "stop" in program_response or "cancel" in program_response or "quit" in program_response:
+            if program_response == "stop" or program_response == "cancel" or program_response == "quit":
                 raise ForcedInteruptError
             if not program_response.replace(" ", "I").isalpha():
                 raise InvalidProgramError
@@ -67,12 +65,20 @@ class Info(commands.Cog):
             year_response = await self.client.wait_for(
                 "message", check=lambda message: message.author == user, timeout=60)
             year_response = year_response.content.strip()
-            if "stop" in year_response or "cancel" in year_response or "quit" in year_response:
+            if year_response == "stop" or year_response == "cancel" or year_response == "quit":
                 raise ForcedInteruptError
             return int(year_response)
         except ValueError:
             await ctx.send(f"Sorry {user.mention}, we were expecting a number. Please try again")
             return await self.set_year(ctx, users, user)
+
+    async def set_desc(self, ctx, user):
+        await ctx.send(f"{user.mention}, please enter your desired **description**")
+        desc_response = await self.client.wait_for("message", check=lambda message: message.author == user, timeout=60)
+        desc_response = desc_response.content.strip()
+        if desc_response == "stop" or desc_response == "cancel" or desc_response == "quit":
+            raise ForcedInteruptError
+        return desc_response
 
     @commands.command()
     async def rules(self, ctx):
@@ -96,18 +102,24 @@ class Info(commands.Cog):
                 users[ctx.author.id]["Email"] = await self.set_email(ctx, users, ctx.author)
                 users[ctx.author.id]["Program"] = await self.set_program(ctx, users, ctx.author)
                 users[ctx.author.id]["Year"] = await self.set_year(ctx, users, ctx.author)
+                users[ctx.author.id]["Description"] = "No description. To add one, type -p edit description"
+                await ctx.author.edit(nick=names[0])
             except asyncio.TimeoutError:
                 return await ctx.send(f"Sorry {ctx.author.mention}, you took to long to respond. Command Terminated.")
             except ForcedInteruptError:
                 return await ctx.send(f"{ctx.author.mention} terminated the command")
+            except discord.Forbidden:
+                await ctx.send("**ERROR:** Cannot change discord nickname! Permissions missing or too low!")
 
             users[ctx.author.id]["Title"] = "Official IEEE Member"
+            users[ctx.author.id]["Offences"] = 0
+            users[ctx.author.id]["Chapters"] = "None"
             users[ctx.author.id]["Committees"] = "None"
             users[ctx.author.id]["Level"] = 1
             users[ctx.author.id]["Experience"] = 0
             users[ctx.author.id]["Coins"] = 500
             with open("users.json", "w") as file:
-                json.dump(users, file)
+                json.dump(users, file, indent=4)
             await ctx.send(
                 f"{ctx.author.mention} has successfully registered")
 
@@ -120,11 +132,11 @@ class Info(commands.Cog):
 
     @commands.command()
     async def test(self, ctx):
-        print(ctx.author.nick)
+        await ctx.send("/nick Your name")
 
     @commands.command(aliases=["chaps"])
     async def chapters(self, ctx, chaps=None):
-        role = False
+        role = None
         # Chapters
         if chaps == "computer":
             chaps_embed = discord.Embed(title="Computer Chapter", colour=0X2072AA)
@@ -195,7 +207,7 @@ class Info(commands.Cog):
             comms_embed.add_field(name="Social Committee  <:social:776205198371979325>", value=f"**Desc.:** <text>", inline=False)
             comms_embed.add_field(name="Website Committee  <:website:776205187349086290>", value=f"**Desc.:** <text>", inline=False)
             comms_embed.add_field(name="Workshop Committee  <:workshop:776205171130368061>", value=f"**Desc.:** <text>", inline=False)
-            comms_embed.set_footer(text="To get committee members list, use -committees <commitee>")
+            comms_embed.set_footer(text="To get committee members list, use -committees <committee>")
         comms_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         msg = await ctx.send(embed=comms_embed)
 
@@ -229,6 +241,7 @@ class Info(commands.Cog):
                 role = discord.utils.get(ctx.guild.roles, name="Workshop Committee")
                 await ctx.send(f"{ctx.author.mention} has joined {role.mention}")
                 await ctx.author.add_roles(role)
+
 
 def setup(client):
     client.add_cog(Info(client))

@@ -1,11 +1,13 @@
-import os
-from dotenv import load_dotenv
 import discord
 from discord.ext import commands
+import os
+from dotenv import load_dotenv
 
 load_dotenv(".env")
 client = commands.Bot(command_prefix="-")
 client.remove_command("help")
+
+temp_users = {}
 
 
 @client.event
@@ -13,23 +15,47 @@ async def on_ready():
     print("My Boty is ready...")
 
 
-# Reload Command
-@client.command()
-@commands.is_owner()
-async def reload(ctx, cat):
-    client.unload_extension(f"COGS.{cat}")
-    client.load_extension(f"COGS.{cat}")
-    await ctx.send(f"{cat} reloaded successfully")
-
-
-@reload.error
-async def reload_error(ctx, error):
+async def cog_error(ctx, error):
     if isinstance(error, commands.NotOwner):
         await ctx.send(f"{ctx.author.mention}  **ERROR:** Only the bot owner may use this command")
     elif isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(f"{ctx.author.mention}  **ERROR:** Missing Argument")
     else:
-        await ctx.send(f"{ctx.author.mention}  **ERROR:** Reloading failed")
+        await ctx.send(f"{error}")
+
+
+@client.command()
+@commands.is_owner()
+async def reload(ctx, cat):
+    try:
+        client.unload_extension(f"COGS.{cat}")
+    except commands.ExtensionNotLoaded:
+        pass
+    try:
+        client.load_extension(f"COGS.{cat}")
+        await ctx.send(f"{cat} reloaded successfully")
+    except commands.ExtensionNotFound:
+        await ctx.send(f"{ctx.author.mention}  **ERROR:** Extension not found")
+
+
+@client.command()
+@commands.is_owner()
+async def unload(ctx, cat):
+    try:
+        client.unload_extension(f"COGS.{cat}")
+        await ctx.send(f"{cat} unloaded successfully")
+    except commands.ExtensionNotLoaded:
+        await ctx.send(f"{ctx.author.mention}  **ERROR:** Extension already unloaded")
+
+
+@reload.error
+async def reload_error(ctx, error):
+    await cog_error(ctx, error)
+
+
+@unload.error
+async def reload_error(ctx, error):
+    await cog_error(ctx, error)
 
 '''
 # Catch Command Errors
