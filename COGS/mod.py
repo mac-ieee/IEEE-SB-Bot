@@ -71,7 +71,7 @@ class Moderation(commands.Cog):
         elif "team rocket blasts off at the speed of light" in msg.content.strip().lower():
             await msg.channel.send("SURRENDER NOW OR PREPARE TO FIGHT")
         elif "ehe" in msg.content.strip().lower() and not msg.author.bot:
-            await msg.channel.send("\"EHE\", TE NANDAYO?!")
+            await msg.reply("\"EHE\", TE NANDAYO?!", mention_author=True)
 
 
 def setup(client):

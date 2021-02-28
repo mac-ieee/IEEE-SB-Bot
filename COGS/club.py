@@ -22,10 +22,15 @@ class ClubActivities(commands.Cog):
                                       f"**Program:** {users[str(user.id)]['Program']}\n"
                                       f"**Year:** {users[str(user.id)]['Year']}",
                                 inline=False)
-        profile_embed.add_field(name="CHAPTERS:",
-                                value=users[str(user.id)]['Chapters'], inline=True)
-        profile_embed.add_field(name="COMMITTEES:",
-                                value=users[str(user.id)]['Committees'], inline=True)
+        info = Info(self.client)
+        for group in info.role_groups:
+            group_list = ""
+            for role in user.roles:
+                if role.name in info.roles_list and info.roles_list[role.name]["Group"].lower() == group.lower()[0:-1]:
+                    group_list += f"{role.mention}\n"
+            if group_list != "":
+                profile_embed.add_field(name=group.upper()+":", value=group_list, inline=True)
+
         profile_embed.add_field(name="STATS:",
                                 value=f"**Offences:** {users[str(user.id)]['Offences']}\n"
                                       f"**Level:** {users[str(user.id)]['Level']}\n"
@@ -43,10 +48,10 @@ class ClubActivities(commands.Cog):
 
         if action.startswith("<@!") and action.endswith(">"):
             if action.lstrip("<@!").rstrip(">") in users:
-                user = self.client.get_user(int(action.lstrip("<@!").rstrip(">")))
+                user = ctx.guild.get_member(int(action.lstrip("<@!").rstrip(">")))
                 await self.get_profile(ctx, users, user)
             else:
-                await ctx.send(f"{ctx.author.mention}, this user hasn't registered yet.")
+                await ctx.reply(f"That user hasn't registered yet.")
         elif action == "edit" and str(ctx.author.id) in users:
             try:
                 if data == "name":

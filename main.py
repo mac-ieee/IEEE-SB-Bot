@@ -4,7 +4,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv(".env")
-client = commands.Bot(command_prefix="-")
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix="-", intents=intents)
 client.remove_command("help")
 
 temp_users = {}
