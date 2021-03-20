@@ -68,7 +68,7 @@ class Help(commands.Cog):
         else:
             command = "IEEE McMaster SB Bot Commands"
             helpEmbed = discord.Embed(colour=0X2072AA)
-            helpEmbed.add_field(name="Info  :scroll:", value="`rules`, `register`, chapters, committees, execteam",
+            helpEmbed.add_field(name="Info  :scroll:", value="`rules`, `register`, `chapters`, `committees`, execteam",
                                 inline=False)
             helpEmbed.add_field(name="Club Activities  <:fireball:766987229713006619>",
                                 value="`profile`, meetings, games",
