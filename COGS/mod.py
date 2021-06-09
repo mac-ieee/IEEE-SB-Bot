@@ -72,7 +72,7 @@ class Moderation(commands.Cog):
             await msg.channel.send("SURRENDER NOW OR PREPARE TO FIGHT")
         elif "ehe" in msg.content.strip().lower() and not msg.author.bot:
             await msg.reply("\"EHE\", TE NANDAYO?!", mention_author=True)
-        elif "omae was mou shindeiru" in msg.content.stip().lower() and not msg.author.bot:
+        elif "omae was mou shindeiru" in msg.content.strip().lower() and not msg.author.bot:
             await msg.reply("NANI?!", mention_author=True)
 
 
