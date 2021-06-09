@@ -12,7 +12,7 @@ class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.swear_dictionary = open(
-            r"Information\swear_dictionary.txt", "r")
+            r"Information/swear_dictionary.txt", "r")
 
     @commands.Cog.listener()
     async def on_message(self, msg):
