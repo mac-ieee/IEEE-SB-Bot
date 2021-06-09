@@ -21,7 +21,6 @@ class Moderation(commands.Cog):
             if swear.strip().lower() in msg.content.lower() and not msg.author.bot:
                 await msg.channel.purge(limit=1)
 
-                os.chdir(r"C:\Users\Evan\Documents\GitHub\IEEE-SB-Bot")
                 with open("users.json", "r") as file:
                     users = json.load(file)
 

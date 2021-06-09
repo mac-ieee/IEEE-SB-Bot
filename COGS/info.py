@@ -11,7 +11,7 @@ class Info(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-        with open(r"C:\Users\Evan\Documents\GitHub\IEEE-SB-Bot\Information\roles_list.json", "r") as file:
+        with open(r"Information/roles_list.json", "r") as file:
             self.roles_list = json.load(file)
 
         for role in self.roles_list:
@@ -91,7 +91,7 @@ class Info(commands.Cog):
         return desc_response
 
     async def sync_roles(self, ctx):
-        with open(r"C:\Users\Evan\Documents\GitHub\IEEE-SB-Bot\Information\roles_list.json", "r") as file:
+        with open(r"Information/roles_list.json", "r") as file:
             self.roles_list = json.load(file)
 
         for role in self.roles_list:
@@ -174,12 +174,11 @@ class Info(commands.Cog):
 
     @commands.command()
     async def rules(self, ctx):
-        rules = open(r"C:\Users\Evan\Documents\GitHub\IEEE-SB-Bot\Information\rules.txt", "r")
+        rules = open(r"/Information\rules.txt", "r")
         await ctx.author.send(rules.read())
 
     @commands.command()
     async def register(self, ctx):
-        os.chdir(r"C:\Users\Evan\Documents\GitHub\IEEE-SB-Bot")
         with open("users.json", "r") as file:
             users = json.load(file)
 
