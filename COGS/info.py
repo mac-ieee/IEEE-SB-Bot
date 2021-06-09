@@ -174,7 +174,7 @@ class Info(commands.Cog):
 
     @commands.command()
     async def rules(self, ctx):
-        rules = open(r"/Information\rules.txt", "r")
+        rules = open(r"Information/rules.txt", "r")
         await ctx.author.send(rules.read())
 
     @commands.command()
