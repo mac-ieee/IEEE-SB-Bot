@@ -122,8 +122,7 @@ class Info(commands.Cog):
                 roles_embed.set_thumbnail(url=self.roles_list[role]["Thumbnail"])
                 leader_list = ""
                 for leader in self.roles_list[role]["Leaders"]:
-                    leader_list += \
-                        f"**{leader}:** <@{self.roles_list[role]['Leaders'][leader]}>\n"
+                    leader_list += f"**{leader}:** <@{self.roles_list[role]['Leaders'][leader]}>\n"
                 if leader_list == "":
                     leader_list = "None"
                 roles_embed.add_field(name="LEADERS:", value=leader_list)
