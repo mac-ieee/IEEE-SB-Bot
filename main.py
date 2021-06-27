@@ -58,6 +58,13 @@ async def reload_error(ctx, error):
 async def reload_error(ctx, error):
     await cog_error(ctx, error)
 
+
+@client.command()
+@commands.is_owner()
+async def reboot(ctx):
+    for filename in os.listdir("./COGS"):
+        if filename.endswith(".py"):
+            client.load_extension(f"COGS.{filename[:-3]}")
 '''
 # Catch Command Errors
 @client.event
@@ -66,8 +73,7 @@ async def on_command_error(ctx, error):
 '''
 
 # Start
-for filename in os.listdir("./COGS"):
-    if filename.endswith(".py"):
-        client.load_extension(f"COGS.{filename[:-3]}")
+reboot()
+    
 
 client.run(os.getenv("DISCORD_TOKEN"))
