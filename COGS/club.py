@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import os
 import json
 import asyncio
 from COGS.info import Info, ForcedInteruptError

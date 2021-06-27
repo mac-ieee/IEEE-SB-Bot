@@ -5,10 +5,10 @@
         "Group": "Chapter",
         "Description": "<Description>",
         "Leaders": {
-            "Chair": "155514980941168641",
-            "Vice-Chair 1": "452879434517839896",
-            "Vice-Chair 2": "109423134960029696",
-            "Secretary": "542479593656025113"
+            "Chair": "109423134960029696",
+            "Vice-Chair 1": "378197941128527877",
+            "Vice-Chair 2": "397253245615210506",
+            "Secretary": "Umang Rajkarnikar?"
         }
     },
     "EMBS Chapter": {
@@ -17,8 +17,7 @@
         "Group": "Chapter",
         "Description": "<Description>",
         "Leaders": {
-            "Chair": "725035865193316502",
-            "Vice-Chair": "661320594280939530"
+            "Chair": "Namya Mehan?",
         }
     },
     "PES Chapter": {
@@ -27,6 +26,7 @@
         "Group": "Chapter",
         "Description": "<Description>",
         "Leaders": {
+            "Chair": "187716595320225793"
         }
     },
     "Discord Committee": {
@@ -53,7 +53,7 @@
         "Group": "Committee",
         "Description": "The website committee is responsible for the creation and upkeep of the McMaster IEEE Student Branch's website. The website serves as a collaborative effort from all committees of the IEEE Student Branch, as it will be used to advertise information collection from throughout the student branch. Members of the website committee specifically, will have the chance to learn or consolidate their website building and maintenance skills.",
         "Leaders": {
-            "Head": "330536941751894018"
+            "WebMaster": "452879434517839896"
         }
     },
     "Workshop Committee": {

@@ -204,8 +204,6 @@ class Info(commands.Cog):
 
             users[ctx.author.id]["Title"] = "Official IEEE Member"
             users[ctx.author.id]["Offences"] = 0
-            users[ctx.author.id]["Chapters"] = "None"
-            users[ctx.author.id]["Committees"] = "None"
             users[ctx.author.id]["Level"] = 1
             users[ctx.author.id]["Experience"] = 0
             users[ctx.author.id]["Coins"] = 500
