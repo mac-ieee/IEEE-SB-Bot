@@ -61,7 +61,7 @@ async def reload_error(ctx, error):
 
 @client.command()
 @commands.is_owner()
-async def reboot(ctx):
+async def reboot():
     for filename in os.listdir("./COGS"):
         if filename.endswith(".py"):
             client.load_extension(f"COGS.{filename[:-3]}")
