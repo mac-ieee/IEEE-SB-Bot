@@ -66,7 +66,7 @@ async def reboot(ctx):
     for filename in os.listdir("./COGS"):
         if filename.endswith(".py"):
             client.load_extension(f"COGS.{filename[:-3]}")
-            print("test2")
+
 '''
 # Catch Command Errors
 @client.event
@@ -75,7 +75,6 @@ async def on_command_error(ctx, error):
 '''
 
 # Start
-await reboot(ctx)
 
 
 client.run(os.getenv("DISCORD_TOKEN"))
