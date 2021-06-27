@@ -73,7 +73,7 @@ async def on_command_error(ctx, error):
 '''
 
 # Start
-reboot()
-    
+await reboot()
+
 
 client.run(os.getenv("DISCORD_TOKEN"))
