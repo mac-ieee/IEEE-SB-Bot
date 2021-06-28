@@ -25,7 +25,7 @@ class CustomHelpCommand(commands.HelpCommand):
 
 load_dotenv(".env")
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix="-", intents=intents, help_command=CustomHelpCommand)
+client = commands.Bot(command_prefix="-", intents=intents, help_command=CustomHelpCommand())
 temp_users = {}
 
 
