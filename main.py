@@ -10,8 +10,17 @@ class CustomHelpCommand(commands.HelpCommand):
         super().__init__()
 
     async def send_bot_help(self, mapping):
-        for cog in mapping:
-            await self.get_destination().send(f"{cog.qualified_name}: {[command.name for command in mapping[cog]]}")
+        HelpEmbed = discord.Embed(title="IEEE McMaster SB Bot Command List", colour=0X2072AA)
+        HelpEmbed.set_footer(text="For additional information, use -help <command>")
+
+        try:
+            for cog in mapping:
+                HelpEmbed.add_field(name=cog.description,
+                                    value="> "+"".join([f"`{command.name}`, " for command in cog.get_commands()])[:-2],
+                                    inline=False)
+        except AttributeError:
+            pass
+        await self.get_destination().send(embed=HelpEmbed)
 
     async def send_cog_help(self, cog):
         await self.get_destination().send(f"{cog.qualified_name}: {[command.name for command in cog.get_commands()]}")
@@ -26,10 +35,7 @@ class CustomHelpCommand(commands.HelpCommand):
         if command.brief is not None:
             HelpEmbed.add_field(name="Examples", value=f"`{command.brief}`", inline=True)
         if command.aliases:
-            aliases = ""
-            for alias in command.aliases:
-                aliases += f"{alias}\n"
-            HelpEmbed.add_field(name="Aliases", value=f"`{aliases}`")
+            HelpEmbed.add_field(name="Aliases", value="".join([f"`{alias}`\n" for alias in command.aliases]))
         if command.help is not None:
             HelpEmbed.add_field(name="Requirements", value=f"```fix\n{command.help}\n```", inline=True)
         await self.get_destination().send(embed=HelpEmbed)
@@ -97,8 +103,11 @@ async def on_command_error(ctx, error):
 '''
 
 # Start
-for filename in os.listdir("./COGS"):
-    if filename.endswith(".py"):
-        client.load_extension(f"COGS.{filename[:-3]}")
+client.load_extension(f"COGS.info")
+client.load_extension(f"COGS.club")
+client.load_extension(f"COGS.utils")
+client.load_extension(f"COGS.mod")
+client.load_extension(f"COGS.settings")
+client.load_extension(f"COGS.help")
 
 client.run(os.getenv("DISCORD_TOKEN"))

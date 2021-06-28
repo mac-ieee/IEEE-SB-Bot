@@ -5,7 +5,7 @@ import json
 import asyncio
 
 
-class Info(commands.Cog):
+class Info(commands.Cog, description="Info :scroll:"):
     roles_list = {}
     role_groups = []
 

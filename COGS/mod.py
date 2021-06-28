@@ -5,7 +5,7 @@ import json
 from main import temp_users
 
 
-class Moderation(commands.Cog):
+class Moderation(commands.Cog, description="Moderation :oncoming_police_car:"):
     swear_dictionary = None
 
 
