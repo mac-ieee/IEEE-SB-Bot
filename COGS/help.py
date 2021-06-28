@@ -7,7 +7,7 @@ class Help(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def help(self, ctx, command=None):
+    async def oldhelp(self, ctx, command=None):
         # Info
         if command == "rules":
             helpEmbed = discord.Embed(description="PMs you the server's official rules", colour=0X2072AA)
