@@ -20,7 +20,9 @@ class CustomHelpCommand(commands.HelpCommand):
         await self.get_destination().send(f"{group.name}: {[command.name for index, command in enumerate(group.commands)]}")
 
     async def send_command_help(self, command):
-        await self.get_destination().send(command.name)
+        HelpEmbed = discord.Embed(description=command.description, colour=0X2072AA)
+        HelpEmbed.set_author(name=f"Help: {command.name}")
+        await self.get_destination().send(embed=HelpEmbed)
 
 
 load_dotenv(".env")

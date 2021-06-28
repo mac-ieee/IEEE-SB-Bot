@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-import time
 
 
 class Utilities(commands.Cog):
@@ -8,7 +7,7 @@ class Utilities(commands.Cog):
         self.client = client
 
     # Ping
-    @commands.command()
+    @commands.command(description="Pings the bot and returns the latency")
     async def ping(self, ctx):
         pingEmbed = discord.Embed(title="Ping", colour=0X2072AA)
         pingEmbed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
