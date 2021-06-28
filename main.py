@@ -20,8 +20,18 @@ class CustomHelpCommand(commands.HelpCommand):
         await self.get_destination().send(f"{group.name}: {[command.name for index, command in enumerate(group.commands)]}")
 
     async def send_command_help(self, command):
-        HelpEmbed = discord.Embed(description=command.description, colour=0X2072AA)
-        HelpEmbed.set_author(name=f"Help: {command.name}")
+        HelpEmbed = discord.Embed(title=f"Help: {command.name}", description=command.description, colour=0X2072AA)
+        if command.usage is not None:
+            HelpEmbed.add_field(name="Usage Syntax", value=f"`{command.name} {command.usage}`", inline=True)
+        if command.brief is not None:
+            HelpEmbed.add_field(name="Examples", value=f"`{command.brief}`", inline=True)
+        if command.aliases:
+            aliases = ""
+            for alias in command.aliases:
+                aliases += f"{alias}\n"
+            HelpEmbed.add_field(name="Aliases", value=f"`{aliases}`")
+        if command.help is not None:
+            HelpEmbed.add_field(name="Requirements", value=f"```fix\n{command.help}\n```", inline=True)
         await self.get_destination().send(embed=HelpEmbed)
 
 

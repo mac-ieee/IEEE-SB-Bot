@@ -170,13 +170,12 @@ class Info(commands.Cog):
             roles_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
             await ctx.send(embed=roles_embed)
 
-
-    @commands.command()
+    @commands.command(description="PMs you the server's official rules")
     async def rules(self, ctx):
         rules = open(r"Information/rules.txt", "r")
         await ctx.author.send(rules.read())
 
-    @commands.command()
+    @commands.command(description="Officially registers you as an IEEE Student Branch member xD")
     async def register(self, ctx):
         with open("users.json", "r") as file:
             users = json.load(file)
@@ -211,7 +210,7 @@ class Info(commands.Cog):
             await ctx.send(
                 f"{ctx.author.mention} has successfully registered")
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def kill(self, ctx, victim: discord.User = None):
         if victim and ctx.author != victim:
             await ctx.send(f"{ctx.author.mention} killed {victim.mention}")

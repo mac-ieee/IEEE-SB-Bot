@@ -15,7 +15,12 @@ class Utilities(commands.Cog):
         await ctx.send(embed=pingEmbed)
 
     # Clear
-    @commands.command(aliases=["prune", "purge"])
+    @commands.command(aliases=["prune", "purge"],
+                      description="Deletes multiple messages (up to 1000).\n"
+                                  "If no value is specified, 1 message will be deleted by default.",
+                      usage="<integer>",
+                      brief="clear\nclear 10",
+                      help="User: Exec Role\nBot: Manage Messages")
     @commands.has_role("Exec")
     async def clear(self, ctx, arg_num=1):
         if arg_num > 1000 or arg_num < 1:
