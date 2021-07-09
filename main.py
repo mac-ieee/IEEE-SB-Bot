@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import json
+import os
 from dotenv import load_dotenv
 
 
@@ -112,4 +112,4 @@ client.load_extension(f"COGS.mod")
 client.load_extension(f"COGS.settings")
 client.load_extension(f"COGS.help")
 
-client.run("")
+client.run(os.getenv("DISCORD_TOKEN"))
