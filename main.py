@@ -112,4 +112,4 @@ client.load_extension(f"COGS.mod")
 client.load_extension(f"COGS.settings")
 client.load_extension(f"COGS.help")
 
-client.run("ODU5OTcwMDM3OTAwNTA5MjE1.YN0bgg.NVludOSeTu9LK53xGnmppo9p1fc")
+client.run("")
