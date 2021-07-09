@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import os
+import json
 from dotenv import load_dotenv
 
 
@@ -10,46 +10,48 @@ class CustomHelpCommand(commands.HelpCommand):
         super().__init__()
 
     async def send_bot_help(self, mapping):
-        HelpEmbed = discord.Embed(title="IEEE McMaster SB Bot Command List", colour=0X2072AA)
-        HelpEmbed.set_footer(text="For additional information, use -help <command>")
+        help_embed = discord.Embed(title="IEEE McMaster SB Bot Command List", colour=0X2072AA)
+        help_embed.set_footer(text="For additional information, use -help <command>")
 
         try:
             for cog in mapping:
-                HelpEmbed.add_field(name=cog.description,
-                                    value="> "+"".join([f"`{command.name}`, " for command in cog.get_commands()])[:-2],
-                                    inline=False)
+                help_embed.add_field(name=cog.description,
+                                     value="> " + "".join([f"`{command.name}`, " for command in cog.get_commands()
+                                                           if not command.hidden])[:-2],
+                                     inline=False)
         except AttributeError:
             pass
-        await self.get_destination().send(embed=HelpEmbed)
+        await self.get_destination().send(embed=help_embed)
 
     async def send_cog_help(self, cog):
         await self.get_destination().send(f"{cog.qualified_name}: {[command.name for command in cog.get_commands()]}")
 
     async def send_group_help(self, group):
-        await self.get_destination().send(f"{group.name}: {[command.name for index, command in enumerate(group.commands)]}")
+        await self.get_destination().send(
+            f"{group.name}: {[command.name for index, command in enumerate(group.commands)]}")
 
     async def send_command_help(self, command):
-        HelpEmbed = discord.Embed(title=f"Help: {command.name}", description=command.description, colour=0X2072AA)
+        help_embed = discord.Embed(title=f"Help: {command.name}", description=command.description, colour=0X2072AA)
         if command.usage is not None:
-            HelpEmbed.add_field(name="Usage Syntax", value=f"`{command.name} {command.usage}`", inline=True)
+            help_embed.add_field(name="Usage Syntax", value=f"`{command.name} {command.usage}`", inline=True)
         if command.brief is not None:
-            HelpEmbed.add_field(name="Examples", value=f"`{command.brief}`", inline=True)
+            help_embed.add_field(name="Examples", value=f"`{command.brief}`", inline=True)
         if command.aliases:
-            HelpEmbed.add_field(name="Aliases", value="".join([f"`{alias}`\n" for alias in command.aliases]))
+            help_embed.add_field(name="Aliases", value="".join([f"`{alias}`\n" for alias in command.aliases]))
         if command.help is not None:
-            HelpEmbed.add_field(name="Requirements", value=f"```fix\n{command.help}\n```", inline=True)
-        await self.get_destination().send(embed=HelpEmbed)
+            help_embed.add_field(name="Requirements", value=f"```fix\n{command.help}\n```", inline=True)
+        await self.get_destination().send(embed=help_embed)
 
 
 load_dotenv(".env")
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix="-", intents=intents, help_command=CustomHelpCommand())
+client = commands.Bot(command_prefix="-", intents=intents, help_command=CustomHelpCommand(), case_insensitive=True)
 temp_users = {}
 
 
 @client.event
 async def on_ready():
-    print("My Boty is ready...")
+    print("\033[0m My Boty is ready...")
 
 
 async def cog_error(ctx, error):
@@ -110,4 +112,4 @@ client.load_extension(f"COGS.mod")
 client.load_extension(f"COGS.settings")
 client.load_extension(f"COGS.help")
 
-client.run(os.getenv("DISCORD_TOKEN"))
+client.run("ODU5OTcwMDM3OTAwNTA5MjE1.YN0bgg.NVludOSeTu9LK53xGnmppo9p1fc")

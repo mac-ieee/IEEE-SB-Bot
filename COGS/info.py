@@ -7,19 +7,25 @@ import asyncio
 
 class Info(commands.Cog, description="Info :scroll:"):
     roles_list = {}
-    role_groups = []
+    new_cmds = {}
 
     def __init__(self, client):
         self.client = client
         with open(r"Information/roles_list.json", "r") as file:
             self.roles_list = json.load(file)
 
-        for role in self.roles_list:
-            if self.roles_list[role]["Group"] != "" and not self.role_groups.__contains__((self.roles_list[role]["Group"] + "s").lower()):
-                self.role_groups.append((self.roles_list[role]["Group"] + "s").lower())
-        self.role_group.update(aliases=self.role_groups)
+        cmds = self.get_commands()
+        cmd_names = [cmd.name.lower() for cmd in cmds]
+        for branch in self.roles_list:
+            if "".join(branch.lower().split()) in cmd_names:
+                self.new_cmds[branch] = cmds[cmd_names.index("".join(branch.lower().split()))]
+            else:
+                print(f"\033[93m Warning: {branch} from roles_list has not been declared as a command")
 
-    async def set_name(self, ctx, users, user):
+        print("test")
+
+
+    async def set_name(self, ctx, user):
         try:
             await ctx.send(f"{user.mention}, please enter your **first** and **last name**")
             name_response = await self.client.wait_for(
@@ -33,12 +39,12 @@ class Info(commands.Cog, description="Info :scroll:"):
         except InvalidNameError:
             await ctx.send(
                 f"Sorry {user.mention}, names can only consist of letters. Please try again")
-            return await self.set_name(ctx, users, user)
+            return await self.set_name(ctx, user)
         except IndexError:
             await ctx.send(f"Sorry {user.mention}, we need your last name as well. Please try again")
-            return await self.set_name(ctx, users, user)
+            return await self.set_name(ctx, user)
 
-    async def set_email(self, ctx, users, user):
+    async def set_email(self, ctx, user):
         try:
             await ctx.send(f"{user.mention}, please enter your **McMaster email address**")
             email_response = await self.client.wait_for(
@@ -51,9 +57,9 @@ class Info(commands.Cog, description="Info :scroll:"):
             return email_response
         except InvalidEmailError:
             await ctx.send(f"Sorry {user.mention}, we can't use that email address. Please try again")
-            return await self.set_email(ctx, users, user)
+            return await self.set_email(ctx, user)
 
-    async def set_program(self, ctx, users, user):
+    async def set_program(self, ctx, user):
         try:
             await ctx.send(f"{user.mention}, please enter your **program name**")
             program_response = await self.client.wait_for(
@@ -67,9 +73,9 @@ class Info(commands.Cog, description="Info :scroll:"):
         except InvalidProgramError:
             await ctx.send(
                 f"Sorry {user.mention}, program names can only use letter. Please try again")
-            return await self.set_program(ctx, users, user)
+            return await self.set_program(ctx, user)
 
-    async def set_year(self, ctx, users, user):
+    async def set_year(self, ctx, user):
         try:
             await ctx.send(f"{user.mention}, What **year** are you in?")
             year_response = await self.client.wait_for(
@@ -80,7 +86,7 @@ class Info(commands.Cog, description="Info :scroll:"):
             return int(year_response)
         except ValueError:
             await ctx.send(f"Sorry {user.mention}, we were expecting a number. Please try again")
-            return await self.set_year(ctx, users, user)
+            return await self.set_year(ctx, user)
 
     async def set_desc(self, ctx, user):
         await ctx.send(f"{user.mention}, please enter your desired **description**")
@@ -94,81 +100,81 @@ class Info(commands.Cog, description="Info :scroll:"):
         with open(r"Information/roles_list.json", "r") as file:
             self.roles_list = json.load(file)
 
-        for role in self.roles_list:
-            if role not in str(ctx.guild.roles):
-                await ctx.guild.create_role(
-                    name=role, permissions=ctx.guild.default_role.permissions, hoist=True, reason="Guild Role Not Found"
-                )
-        for role in self.roles_list:
-            if self.roles_list[role]["Group"] != "" and not self.role_groups.__contains__(
-                    (self.roles_list[role]["Group"] + "s").lower()):
-                self.role_groups.append((self.roles_list[role]["Group"] + "s").lower())
-        Info.role_group.update(aliases=self.role_groups)
+        for branch in self.roles_list:
+            for group in self.roles_list[branch]:
+                if group not in str(ctx.guild.roles):
+                    await ctx.guild.create_role(
+                        name=group, permissions=ctx.guild.default_role.permissions, hoist=True,
+                        reason="Guild Role Not Found")
 
-    async def disp_roles(self, ctx, group, role):
-        if role:
-            # Filter Group
-            roles_str = str(self.roles_list)
-            role_lower = role.lower() + " " + group[0:-1]
-            role_index = roles_str.lower().find(role_lower)
-            if role_lower in roles_str.lower():
-                role = roles_str[role_index:role_index+len(role_lower)]
+    async def disp_branches(self, ctx, branch, group):
+        if group:
+            await self.disp_groups(ctx, branch, group)
+        else:
+            num_groups = 0
+            groups_embed = discord.Embed(title=f"List of {branch}s", colour=0X2072AA)
+            groups_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            groups_embed.set_footer(text=f"For more information, use -{branch} <{branch} type>")
+            for group in self.roles_list[branch]:
+                groups_embed.add_field(
+                    name=f"{group}  {self.roles_list[branch][group]['Logo']}",
+                    value=self.roles_list[branch][group]["Description"], inline=False)
+                num_groups += 1
+            if num_groups == 1:
+                await self.disp_groups(ctx, branch, branch)
             else:
-                role = role.title() + " " + group[0:-1].title()
+                await ctx.send(embed=groups_embed)
 
-            # Role Info
-            roles_embed = discord.Embed(title=role, colour=0X2072AA)
-            if role in self.roles_list and self.roles_list[role]["Group"].lower() in group.lower():
-                roles_embed.set_thumbnail(url=self.roles_list[role]["Thumbnail"])
-                leader_list = ""
-                for leader in self.roles_list[role]["Leaders"]:
-                    leader_list += f"**{leader}:** <@{self.roles_list[role]['Leaders'][leader]}>\n"
-                if leader_list == "":
-                    leader_list = "None"
-                roles_embed.add_field(name="LEADERS:", value=leader_list)
-                roles_embed.add_field(name="DESCRIPTION:", value=self.roles_list[role]["Description"], inline=False)
-                member_list = ""
-                for member in ctx.guild.members:
-                    if discord.utils.get(ctx.guild.roles, name=role) in member.roles:
-                        member_list += f"{member.mention} "
-                if member_list == "":
-                    member_list = "None"
-                roles_embed.add_field(name="MEMBERS:", value=member_list, inline=False)
-                roles_embed.set_footer(text=f"To join/leave {role}, type 'join' or 'leave'")
-                roles_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-                await ctx.send(embed=roles_embed)
-            else:
-                await ctx.reply(f"There is no {role}")
-            role = discord.utils.get(ctx.guild.roles, name=role)
+    async def disp_groups(self, ctx, branch, group):
+        # Filter Group
+        for g in self.roles_list[branch]:
+            if group.lower() in g.lower():
+                group = g
+
+        try:
+            # Group Info
+            group_embed = discord.Embed(title=group, colour=0X2072AA)
+            group_embed.set_footer(text=f"To join/leave {group}, type 'join' or 'leave'")
+            group_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            group_embed.set_thumbnail(url=self.roles_list[branch][group]["Thumbnail"])
+            leader_list = ""
+            for leader in self.roles_list[branch][group]["Leaders"]:
+                leader_list += f"**{leader}:** {' '.join([id.join(['<@', '>']) for id in self.roles_list[branch][group]['Leaders'][leader]['DiscordID'].split(', ')])}\n"
+
+            if leader_list == "":
+                leader_list = "None"
+            group_embed.add_field(name="LEADERS:", value=leader_list)
+            group_embed.add_field(name="DESCRIPTION:", value=self.roles_list[branch][group]["Description"], inline=False)
+            member_list = ""
+            group_role = discord.utils.get(ctx.guild.roles, name=group)
+            for member in ctx.guild.members:
+                if group_role in member.roles:
+                    member_list += f"{member.mention} "
+            if member_list == "":
+                member_list = "None"
+            group_embed.add_field(name="MEMBERS:", value=member_list, inline=False)
+            await ctx.send(embed=group_embed)
 
             # Join/Leave
             response = await self.client.wait_for("message", check=lambda message: message.author == ctx.author)
             if response.content == "join":
-                if role not in ctx.author.roles:
-                    await response.reply(f"You have joined {role}")
-                    await ctx.author.add_roles(role)
+                if self.roles_list[branch][group]["Private"] == "True":
+                    await response.reply(f"You cannot join a private branch/group")
+                elif group_role not in ctx.author.roles:
+                    await response.reply(f"You have joined {group_role}")
+                    await ctx.author.add_roles(group_role)
                 else:
-                    await response.reply(f"You are already in {role}")
+                    await response.reply(f"You are already in {group_role}")
             elif response.content == "leave":
-                if role in ctx.author.roles:
-                    await response.reply(f"You have resigned from {role}")
-                    await ctx.author.remove_roles(role)
+                if self.roles_list[branch][group]["Private"] == "True":
+                    await response.reply(f"Please contact {ctx.guild.owner.mention} to resign from {branch}")
+                elif group_role in ctx.author.roles:
+                    await response.reply(f"You have resigned from {group_role}")
+                    await ctx.author.remove_roles(group_role)
                 else:
-                    await response.reply(f"You were never a part of {role}")
-
-
-        # Display All Roles
-        else:
-            roles_embed = discord.Embed(title=group.title(), colour=0X2072AA)
-            for role in self.roles_list:
-                if self.roles_list[role]["Group"].lower() in group.lower():
-                    roles_embed.add_field(
-                        name=f"{role}  {self.roles_list[role]['Logo']}",
-                        value=self.roles_list[role]["Description"], inline=False
-                    )
-            roles_embed.set_footer(text=f"For more information, use -{group} <{group[0:-1]}>")
-            roles_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-            await ctx.send(embed=roles_embed)
+                    await response.reply(f"You were never a part of {group_role}")
+        except KeyError:
+            await ctx.reply(f"The specific {branch} you were looking for cannot be resolved")
 
     @commands.command(description="PMs you the server's official rules")
     async def rules(self, ctx):
@@ -185,12 +191,12 @@ class Info(commands.Cog, description="Info :scroll:"):
         else:
             users[ctx.author.id] = {}
             try:
-                names = await self.set_name(ctx, users, ctx.author)
+                names = await self.set_name(ctx, ctx.author)
                 users[ctx.author.id]["First Name"] = names[0]
                 users[ctx.author.id]["Last Name"] = names[1]
-                users[ctx.author.id]["Email"] = await self.set_email(ctx, users, ctx.author)
-                users[ctx.author.id]["Program"] = await self.set_program(ctx, users, ctx.author)
-                users[ctx.author.id]["Year"] = await self.set_year(ctx, users, ctx.author)
+                users[ctx.author.id]["Email"] = await self.set_email(ctx, ctx.author)
+                users[ctx.author.id]["Program"] = await self.set_program(ctx, ctx.author)
+                users[ctx.author.id]["Year"] = await self.set_year(ctx, ctx.author)
                 users[ctx.author.id]["Description"] = "No description. To add one, type -p edit description"
                 await ctx.author.edit(nick=names[0])
             except asyncio.TimeoutError:
@@ -217,10 +223,22 @@ class Info(commands.Cog, description="Info :scroll:"):
         else:
             await ctx.send(f"{ctx.author.mention} killed themself")
 
-    @commands.command()
-    async def role_group(self, ctx, *, role=None):
+    @commands.command(description="Shows the upper echelon that runs and maintains IEEE Student Branch")
+    async def mainbranch(self, ctx, *, group=None):
         await self.sync_roles(ctx)
-        await self.disp_roles(ctx, ctx.invoked_with, role)
+        await self.disp_branches(ctx, "Main Branch", group)
+
+    @commands.command(description="Shows all joinable Chapters and their descriptions.",
+                      aliases=["chapters", "chap", "chaps"])
+    async def chapter(self, ctx, *, group=None):
+        await self.sync_roles(ctx)
+        await self.disp_branches(ctx, "Chapter", group)
+
+    @commands.command(description="Shows all joinable Committees and their descriptions.",
+                      aliases=["committees", "comm", "comms"])
+    async def committee(self, ctx, *, group=None):
+        await self.sync_roles(ctx)
+        await self.disp_branches(ctx, "Committee", group)
 
 
 def setup(client):
