@@ -55,23 +55,19 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
                 if cat.lower() in c.lower() or cat.lower() in self.editable_cmds[c].aliases:
                     cat = c
                     break
-                return await ctx.reply(f"{cat} cannot be resolved. Please use `-edit` for a list of editables")
             if group:
                 # Filter groups
                 for g in self.info.roles_list[cat]:
                     if group.lower() in g.lower():
                         group = g
                         break
-                    return await ctx.reply(
-                        f"{cat}{group} cannot be resolved. Please use `-edit` for a list of editables")
+
                 if leader:
                     # Filter leaders
                     for l in self.info.roles_list[cat][group]["Leaders"]:
                         if leader.lower() in l.lower():
                             leader = l
                             break
-                    return await ctx.reply(
-                        f"{cat}{group}{leader} cannot be resolved. Please use `-edit` for a list of editables")
 
             if cat == "Profile":
                 with open("users.json", "r") as file:
