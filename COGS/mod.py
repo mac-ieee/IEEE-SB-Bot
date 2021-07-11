@@ -3,18 +3,17 @@ from discord.ext import commands
 import os
 import json
 from main import temp_users
+from COGS.utils import Utilities
 
 
 class Moderation(commands.Cog, description="Moderation :oncoming_police_car:"):
     swear_dictionary = None
-
 
     def __init__(self, client):
         self.client = client
         self.swear_dictionary = open(
             r"Information/swear_dictionary.txt", "r")
 
-    @commands.Cog.listener()
     async def on_message(self, msg):
         self.swear_dictionary.seek(0)
         for swear in self.swear_dictionary.readlines():
@@ -74,6 +73,9 @@ class Moderation(commands.Cog, description="Moderation :oncoming_police_car:"):
         elif "omae was mou shindeiru" in msg.content.strip().lower() and not msg.author.bot:
             await msg.reply("NANI?!", mention_author=True)
 
+    @commands.command()
+    async def die(self, ctx):
+        await Utilities.ping(self, ctx)
 
 def setup(client):
     client.add_cog(Moderation(client))

@@ -1,77 +1,141 @@
 {
-    "Computer Chapter": {
-        "Logo": ":desktop:",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/813848518891798588.png?v=1",
-        "Group": "Chapter",
-        "Description": "<Description>",
-        "Leaders": {
-            "Chair": "109423134960029696",
-            "Vice-Chair 1": "378197941128527877",
-            "Vice-Chair 2": "397253245615210506",
-            "Secretary": "Umang Rajkarnikar?"
+    "Main Branch": {
+        "Main Branch": {
+            "Logo": ":TEMP:",
+            "Thumbnail": "https://cdn.icon-icons.com/icons2/2699/PNG/512/ieee_logo_icon_169992.png",
+            "Description": "<Description>",
+            "Private": "True",
+            "Leaders": {
+                "Branch Chair": {
+                    "DiscordID": "109423134960029696",
+                    "Description": "<Description>"
+                },
+                "Branch Vice-Chair": {
+                    "DiscordID": "109423134960029696",
+                    "Description": "<Description>"
+                },
+                "Branch Secretary": {
+                    "DiscordID": "109423134960029696",
+                    "Description": "<Description>"
+                },
+                "Branch Treasurer": {
+                    "DiscordID": "109423134960029696",
+                    "Description": "<Description>"
+                },
+                "Branch Mentor": {
+                    "DiscordID": "109423134960029696",
+                    "Description": "<Description>"
+                }
+            }
         }
     },
-    "EMBS Chapter": {
-        "Logo": ":medical_symbol:",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/813848519261552700.png?v=1",
-        "Group": "Chapter",
-        "Description": "<Description>",
-        "Leaders": {
-            "Chair": "Namya Mehan?"
+    "Chapter": {
+        "Computer Chapter": {
+            "Logo": ":desktop:",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/813848518891798588.png?v=1",
+            "Description": "<Description>",
+            "Private": "False",
+            "Leaders": {
+                "Chair": {
+                    "DiscordID": "109423134960029696",
+                    "Description": "<Description>"
+                },
+                "Vice-Chairs": {
+                    "DiscordID": "378197941128527877, 397253245615210506",
+                    "Description": "<Description>"
+                },
+                "Secretary": {
+                    "DiscordID": "Umang Rajkarnikar",
+                    "Description": "<Description>"
+                }
+            }
+        },
+        "EMBS Chapter": {
+            "Logo": ":medical_symbol:",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/813848519261552700.png?v=1",
+            "Description": "<Description>",
+            "Private": "False",
+            "Leaders": {
+                "Chair": {
+                    "DiscordID": "Namya Mehan",
+                    "Description": "<Description>"
+                }
+            }
+        },
+        "PES Chapter": {
+            "Logo": ":zap:",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/813848518468304956.png?v=1",
+            "Description": "kawaii chapter for kawaii people",
+            "Private": "False",
+            "Leaders": {
+                "Coordinator": {
+                    "DiscordID": "187716595320225793",
+                    "Description": "Edward is very kawaii"
+                }
+            }
         }
     },
-    "PES Chapter": {
-        "Logo": ":zap:",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/813848518468304956.png?v=1",
-        "Group": "Chapter",
-        "Description": "<Description>",
-        "Leaders": {
-            "Chair": "187716595320225793"
-        }
-    },
-    "Discord Committee": {
-        "Logo": "<:discord:776205209046482995>",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/776205209046482995.png?v=1",
-        "Group": "Committee",
-        "Description": "<Description>",
-        "Leaders": {
-            "Head": "766060781383974913"
-        }
-    },
-    "Social Committee": {
-        "Logo": "<:social:776205198371979325>",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/776205198371979325.png?v=1",
-        "Group": "Committee",
-        "Description": "The social committee plans and organizes social events within the IEEE-SB to engage and connect members.",
-        "Leaders": {
-            "Head": "560634842849607691"
-        }
-    },
-    "Website Committee": {
-        "Logo": "<:website:776205187349086290>",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/776205187349086290.png?v=1",
-        "Group": "Committee",
-        "Description": "The website committee is responsible for the creation and upkeep of the McMaster IEEE Student Branch's website. The website serves as a collaborative effort from all committees of the IEEE Student Branch, as it will be used to advertise information collection from throughout the student branch. Members of the website committee specifically, will have the chance to learn or consolidate their website building and maintenance skills.",
-        "Leaders": {
-            "WebMaster": "452879434517839896"
-        }
-    },
-    "Workshop Committee": {
-        "Logo": "<:workshop:776205171130368061>",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",
-        "Group": "Committee",
-        "Description": "The Workshop Committee is invested in providing opportunities for students who have a desire to learn outside the traditional classroom environment. Our mission is to inspire students to think outside the box by offering a range of in-depth training modules, interactive activities and guided mentorship on a variety of skill-building topics to promote personal and professional growth.",
-        "Leaders": {
-            "Head": "625104878301216771"
-        }
-    },
-    "Public Relations Committee": {
-        "Logo": "<:workshop:776205171130368061>",
-        "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",
-        "Group": "Committee",
-        "Description": "The Public Relations committee is committed to growing the McMaster IEEE Student Branch network, including students, alumni, and companies. With creative designs, merchandise, and regular activity on social media, we are able to engage with students to create interest in upcoming events and our club. Furthermore, we actively pursue sponsorships to build relationships with companies and to bring even more interesting events.",
-        "Leaders": {
-            "Head": "182235933230235648"
+    "Committee": {
+        "Discord Committee": {
+            "Logo": "<:discord:776205209046482995>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/776205209046482995.png?v=1",
+            "Group": "Committee",
+            "Description": "<Description>",
+            "Private": "False",
+            "Leaders": {
+                "Head": {
+                    "DiscordID": "766060781383974913",
+                    "Description": "<Description>"
+                }
+            }
+        },
+        "Social Committee": {
+            "Logo": "<:social:776205198371979325>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/776205198371979325.png?v=1",
+            "Description": "The social committee plans and organizes social events within the IEEE-SB to engage and connect members.",
+            "Private": "False",
+            "Leaders": {
+                "Head": {
+                    "DiscordID": "560634842849607691",
+                    "Description": "<Description>"
+                }
+            }
+        },
+        "Website Committee": {
+            "Logo": "<:website:776205187349086290>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/776205187349086290.png?v=1",
+            "Description": "The website committee is responsible for the creation and upkeep of the McMaster IEEE Student Branch's website. The website serves as a collaborative effort from all committees of the IEEE Student Branch, as it will be used to advertise information collection from throughout the student branch. Members of the website committee specifically, will have the chance to learn or consolidate their website building and maintenance skills.",
+            "Private": "False",
+            "Leaders": {
+                "WebMaster": {
+                    "DiscordID": "452879434517839896",
+                    "Description": "<Description>"
+                }
+            }
+        },
+        "Workshop Committee": {
+            "Logo": "<:workshop:776205171130368061>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",
+            "Description": "The Workshop Committee is invested in providing opportunities for students who have a desire to learn outside the traditional classroom environment. Our mission is to inspire students to think outside the box by offering a range of in-depth training modules, interactive activities and guided mentorship on a variety of skill-building topics to promote personal and professional growth.",
+            "Private": "False",
+            "Leaders": {
+                "Head": {
+                    "DiscordID": "625104878301216771",
+                    "Description": "<Description>"
+                }
+            }
+        },
+        "Public Relations Committee": {
+            "Logo": "<:workshop:776205171130368061>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",
+            "Description": "The Public Relations committee is committed to growing the McMaster IEEE Student Branch network, including students, alumni, and companies. With creative designs, merchandise, and regular activity on social media, we are able to engage with students to create interest in upcoming events and our club. Furthermore, we actively pursue sponsorships to build relationships with companies and to bring even more interesting events.",
+            "Private": "False",
+            "Leaders": {
+                "Head": {
+                    "DiscordID": "182235933230235648",
+                    "Description": "<Description>"
+                }
+            }
         }
     }
 }
