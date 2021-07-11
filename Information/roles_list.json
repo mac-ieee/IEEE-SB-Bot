@@ -83,7 +83,10 @@
             "Description": "<Description>",
             "Private": "False",
             "Leaders": {
-                "Head": "766060781383974913"
+                "Head": {
+                    "DiscordID": "766060781383974913",
+                    "Description": "<Description>"
+                }
             }
         },
         "Social Committee": {

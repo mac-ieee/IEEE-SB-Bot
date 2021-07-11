@@ -15,74 +15,6 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
         self.editable_cmds = {"Profile": ClubActivities.profile}
         self.editable_cmds.update(self.info.new_cmds)
 
-    async def winedit(self, ctx, cat, group=None, leader=None):
-        with open("users.json", "r") as file:
-            users = json.load(file)
-
-        if cat == "Profile":
-            user = str(ctx.author.id)
-            edit_embed = discord.Embed(title="Edit Profile - Name",
-                                       description=users[user]["Description"], colour=0X2072AA)
-            edit_embed.set_author(name=f"{ctx.author.name}'s Profile", icon_url=ctx.author.avatar_url)
-            edit_embed.set_thumbnail(url=ctx.author.avatar_url)
-            edit_embed.set_footer(text="Please enter your first and last name")
-            edit_embed.add_field(name="REGISTRATION INFO:",
-                                 value=f"**Name:** ```fix\n{users[user]['First Name']}"
-                                       f" {users[user]['Last Name']}```\n"
-                                       f"**Email:** {users[user]['Email']}\n"
-                                       f"**Program:** {users[user]['Program']}\n"
-                                       f"**Year:** {users[user]['Year']}", inline=False)
-            message = await ctx.send(embed=edit_embed)
-
-            await message.add_reaction(emoji="💾")
-            await message.add_reaction(emoji="❌")
-            try:
-                done, pending = await asyncio.wait([
-                    self.client.wait_for("message", check=lambda m: m.author == ctx.author, timeout=300),
-                    self.client.wait_for("reaction_add",
-                                         check=lambda r, ur: str(r.emoji) in ["💾", "❌"] and ur == ctx.author,
-                                         timeout=300)
-                ], return_when=asyncio.FIRST_COMPLETED)
-            except TimeoutError:
-                print("Someone took too long for a response")
-            else:
-                payload = done.pop().result()
-                if type(payload) == tuple:
-                    rxn, usr = payload
-                    if str(rxn.emoji) == "💾":
-                        edit_embed.set_footer(text="No changes were made to Name")
-                        edit_embed.set_field_at(index=0, name="REGISTRATION INFO",
-                                                value=f"**Name:** {users[user]['First Name']} {users[user]['Last Name']}\n"
-                                                      f"**Email:** {users[user]['Email']}\n"
-                                                      f"**Program:** {users[user]['Program']}\n"
-                                                      f"**Year:** {users[user]['Year']}", inline=False)
-                        await message.edit(embed=edit_embed)
-                    elif str(rxn.emoji) == "❌":
-                        edit_embed.set_footer(text="COMMAND TERMINATED")
-                        edit_embed.set_field_at(index=0, name="REGISTRATION INFO",
-                                                value=f"**Name:** {users[user]['First Name']} {users[user]['Last Name']}\n"
-                                                      f"**Email:** {users[user]['Email']}\n"
-                                                      f"**Program:** {users[user]['Program']}\n"
-                                                      f"**Year:** {users[user]['Year']}", inline=False)
-                        await message.edit(embed=edit_embed)
-                elif type(payload) == discord.message.Message:
-                    edit_embed.set_field_at(index=0, name="REGISTRATION INFO",
-                                            value=f"**Name:** ```diff\n- {users[user]['First Name']}"
-                                                  f" {users[user]['Last Name']}\n+ {payload.content}```\n"
-                                                  f"**Email:** {users[user]['Email']}\n"
-                                                  f"**Program:** {users[user]['Program']}\n"
-                                                  f"**Year:** {users[user]['Year']}", inline=False)
-                    await message.edit(embed=edit_embed)
-                else:
-                    print(payload)
-
-                for future in pending:
-                    future.cancel()
-        else:
-            response = await self.client.wait_for(
-                "message", check=lambda message: message.author == ctx.author, timeout=300)
-            self.editable_cmds[cat].description = response.content
-
     # Ping
     @commands.command(description="Pings the bot and returns the latency")
     async def ping(self, ctx):
@@ -106,40 +38,62 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
             await ctx.channel.purge(limit=1)
             await ctx.channel.purge(limit=arg_num)
 
-    @commands.command()
+    @commands.command(description="Edits stuff. Use `-edit` to show a list of editables",
+                      usage="<profile> <profile parameter>",
+                      brief="profile\nprofile name",
+                      help="Bot: Manage Messages")
     async def edit(self, ctx, cat=None, group=None, *, leader=None):
+        with open(r"Information/roles_list.json", "r") as file:
+            self.info.roles_list = json.load(file)
+
         indexed_info = self.info.roles_list
         indexed_info.update({"Profile": {
-            "Name": None, "Email": None, "Program": None, "Year": None, "Description": None}})
+            "Name": None, "Email": None, "Program": None, "Year": None, "About": None}})
         if cat:
             # Filter cat with indexed list
             for c in self.editable_cmds:
                 if cat.lower() in c.lower() or cat.lower() in self.editable_cmds[c].aliases:
                     cat = c
                     break
-
+                return await ctx.reply(f"{cat} cannot be resolved. Please use `-edit` for a list of editables")
             if group:
                 # Filter groups
                 for g in self.info.roles_list[cat]:
                     if group.lower() in g.lower():
                         group = g
                         break
-
+                    return await ctx.reply(
+                        f"{cat}{group} cannot be resolved. Please use `-edit` for a list of editables")
                 if leader:
                     # Filter leaders
                     for l in self.info.roles_list[cat][group]["Leaders"]:
                         if leader.lower() in l.lower():
                             leader = l
                             break
+                    return await ctx.reply(
+                        f"{cat}{group}{leader} cannot be resolved. Please use `-edit` for a list of editables")
 
-                    await self.winedit(ctx, cat, group, leader)
+            if cat == "Profile":
+                with open("users.json", "r") as file:
+                    self.info.users = json.load(file)
+
+                if str(ctx.author.id) in self.info.users:
+                    await self.info.edit_prof(ctx, str(ctx.author.id), group)
+                    await ctx.reply("Profile changes made successfully.")
+                    with open("users.json", "w") as file:
+                        json.dump(self.info.users, file, indent=4)
                 else:
-                    await self.winedit(ctx, cat, group)
-            else:
-                await self.winedit(ctx, cat)
+                    await ctx.reply("You don't have a profile yet. Type `-register` to get started.")
+
+            elif cat in self.info.roles_list:
+                print(f"{cat = }, {group = }, {leader = }")
+
         else:
-            edit_embed = discord.Embed(title="Edit Options", description="", colour=0X2072AA)
+            profile_params = f"\n\t".join([f"- {param}" for param in indexed_info['Profile']])
+            desc = f"```fix\nProfile:\n\t{profile_params}\n```"
+            edit_embed = discord.Embed(title="Edit Options", description=desc, colour=0X2072AA)
             await ctx.send(embed=edit_embed)
+
 
     @clear.error
     async def clear_error(self, ctx, error):

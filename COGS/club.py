@@ -13,7 +13,7 @@ class ClubActivities(commands.Cog, description="Club Activities  <:fireball:7669
     @commands.command(aliases=["p", "prof"])
     async def profile(self, ctx, *, victim=None):
         with open("users.json", "r") as file:
-            users = json.load(file)
+            self.info.users = json.load(file)
 
         # Call self's profile or a victim's?
         user = None
@@ -26,30 +26,29 @@ class ClubActivities(commands.Cog, description="Club Activities  <:fireball:7669
                     victim: discord.member = v
                     break
             try:
-                if str(victim.id) in users:
+                if str(victim.id) in self.info.users:
                     user: discord.member = victim
                 else:
                     await ctx.reply(f"{victim} hasn't registered yet!")
             except AttributeError:
                 await ctx.reply("The user you are trying to find cannot be found. Please try mentioning them directly.")
         else:
-            if str(ctx.author.id) in users:
+            if str(ctx.author.id) in self.info.users:
                 user: discord.member = ctx.author
             else:
                 await ctx.send(f"Hey {ctx.author.mention}, you haven't registered yet! Type `-register` to get started")
 
         if user:
             # Display Registration Info
-            name = users[str(user.id)]["First Name"] + " " + users[str(user.id)]["Last Name"]
-            profile_embed = discord.Embed(title=users[str(user.id)]['Title'],
-                                          description=users[str(user.id)]['Description'], colour=0X2072AA)
+            profile_embed = discord.Embed(title=self.info.users[str(user.id)]['Title'],
+                                          description=self.info.users[str(user.id)]["About"], colour=0X2072AA)
             profile_embed.set_author(name=f"{user.name}'s Profile", icon_url=user.avatar_url)
             profile_embed.set_thumbnail(url=user.avatar_url)
             profile_embed.add_field(name="REGISTRATION INFO:",
-                                    value=f"**Name:** {name}\n"
-                                          f"**Email:** {users[str(user.id)]['Email']}\n"
-                                          f"**Program:** {users[str(user.id)]['Program']}\n"
-                                          f"**Year:** {users[str(user.id)]['Year']}",
+                                    value=f"**Name:** {self.info.users[str(user.id)]['Name']}\n"
+                                          f"**Email:** {self.info.users[str(user.id)]['Email']}\n"
+                                          f"**Program:** {self.info.users[str(user.id)]['Program']}\n"
+                                          f"**Year:** {self.info.users[str(user.id)]['Year']}",
                                     inline=False)
 
             # Display Affiliation with Branches and the Branch Groups
@@ -62,10 +61,10 @@ class ClubActivities(commands.Cog, description="Club Activities  <:fireball:7669
                     profile_embed.add_field(name=branch.upper()+":", value=group_list, inline=True)
 
             profile_embed.add_field(name="STATS:",
-                                    value=f"**Offences:** {users[str(user.id)]['Offences']}\n"
-                                          f"**Level:** {users[str(user.id)]['Level']}\n"
-                                          f"**EXP:** {users[str(user.id)]['Experience']}\n"
-                                          f"**Coins:** {users[str(user.id)]['Coins']}",
+                                    value=f"**Offences:** {self.info.users[str(user.id)]['Offences']}\n"
+                                          f"**Level:** {self.info.users[str(user.id)]['Level']}\n"
+                                          f"**EXP:** {self.info.users[str(user.id)]['Experience']}\n"
+                                          f"**Coins:** {self.info.users[str(user.id)]['Coins']}",
                                     inline=False)
             await ctx.send(embed=profile_embed)
 
