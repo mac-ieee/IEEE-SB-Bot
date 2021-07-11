@@ -127,8 +127,9 @@ class Info(commands.Cog, description="Info :scroll:"):
                                 await message.edit(embed=edit_embed)
                                 return True
                         elif type(payload) == discord.message.Message:
+                            payload.content = payload.content.strip()
                             if param == "Name":
-                                if " " not in payload.content.strip():
+                                if " " not in payload.content:
                                     edit_embed.set_footer(text="ERROR: Last name not found!")
                                     break
                                 payload.content = payload.content.title()
@@ -143,7 +144,7 @@ class Info(commands.Cog, description="Info :scroll:"):
 
                             bad_response = False
                             edit_embed.set_footer(text=f"Save changes to {param}?")
-                            await get_reg_info(["```diff\n- ", f"\n+ {payload.content.strip()}\n```"])
+                            await get_reg_info(["```diff\n- ", f"\n+ {payload.content}\n```"])
                             await message.edit(embed=edit_embed)
 
                             # Get reaction
