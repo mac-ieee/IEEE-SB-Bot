@@ -67,25 +67,36 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
         indexed_info = self.info.roles_list
         indexed_info.update({"Profile": {
             "Name": None, "Email": None, "Program": None, "Year": None, "About": None}})
+
         if cat:
+            match = False
             # Filter cat with indexed list
-            for c in self.editable_cmds:
+            for c in self.info.roles_list:
                 if cat.lower() in c.lower() or cat.lower() in self.editable_cmds[c].aliases:
-                    cat = c
+                    cat, match = c, True
                     break
-            if group:
+            if match and len(self.info.roles_list[cat]) == 1:
+                group, leader, match = cat, group, True
+            if not match:
+                return await ctx.reply(f"\"{cat}\" is not a recognisable option")
+            elif group:
+                match = False
                 # Filter groups
                 for g in self.info.roles_list[cat]:
                     if group.lower() in g.lower():
-                        group = g
+                        group, match = g, True
                         break
-
-                if leader:
+                if not match:
+                    return await ctx.reply(f"\"{group}\" is not a recognisable option in \"{cat}\"")
+                elif leader:
+                    match = False
                     # Filter leaders
                     for l in self.info.roles_list[cat][group]["Leaders"]:
                         if leader.lower() in l.lower():
-                            leader = l
+                            leader, match = l, True
                             break
+                    if not match:
+                        return await ctx.reply(f"\"{leader}\" is not a recognisable option in \"{cat} > {group}\"")
 
             if cat == "Profile":
                 with open("users.json", "r") as file:
@@ -98,8 +109,8 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
                 else:
                     await ctx.reply("You don't have a profile yet. Type `-register` to get started.")
 
-            elif cat in self.info.roles_list:
-                print(f"{cat = }, {group = }, {leader = }")
+            else:
+                await ctx.reply(f"{cat = }, {group = }, {leader = }")
 
         else:
             profile_params = f"\n\t".join([f"- {param}" for param in indexed_info['Profile']])

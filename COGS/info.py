@@ -199,9 +199,15 @@ class Info(commands.Cog, description="Info :scroll:"):
 
     async def disp_groups(self, ctx, branch, group):
         # Filter Group
+        match = False
         for g in self.roles_list[branch]:
             if group.lower() in g.lower():
-                group = g
+                group, match = g, True
+                break
+
+        # End command if no filtered result
+        if not match:
+            return await ctx.reply(f"\"{group}\" is not a \"{branch}\"")
 
         try:
             # Group Info
