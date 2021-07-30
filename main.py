@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord_components.client import DiscordComponents
 import os
 from dotenv import load_dotenv
 
@@ -52,6 +53,7 @@ temp_users = {}
 @client.event
 async def on_ready():
     print("\033[0m My Boty is ready...")
+    DiscordComponents(client)
 
 
 async def cog_error(ctx, error):

@@ -1,6 +1,7 @@
 import discord
+import discord_components.interaction
 from discord.ext import commands
-import os
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 import json
 import asyncio
 
@@ -47,7 +48,7 @@ class Info(commands.Cog, description="Info :scroll:"):
             print("Someone took too long to respond")
             edit_embed.set_footer(text="No response received. COMMAND TERMINATED.")
             await get_reg_info(["", ""])
-            await message.edit(embed=edit_embed)
+            await message.edit(embed=edit_embed, components=[])
 
         prof_templ = {
             "Name": "<Enter First & Last Names>",
@@ -75,6 +76,10 @@ class Info(commands.Cog, description="Info :scroll:"):
         edit_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         edit_embed.add_field(name="REGISTRATION INFO:", value="-", inline=False)
         await get_reg_info(["", ""])
+        but_next = Button(style=ButtonStyle.grey, label="Next", emoji="➡")
+        but_exit = Button(style=ButtonStyle.red, label="Exit", emoji="✖")
+        but_save = Button(style=ButtonStyle.blue, label="Save", emoji="💾")
+        but_cancel = Button(style=ButtonStyle.red, label="Cancel", emoji="✖")
         message = await ctx.send(embed=edit_embed)
 
         # If no specific profile parameter is indicated, then every profile parameter will be edited
@@ -82,22 +87,15 @@ class Info(commands.Cog, description="Info :scroll:"):
             cancel_save = True
             # Loop profile parameter editing if user cancels on saving. Maybe they made a typo.
             while cancel_save:
-                await message.remove_reaction("💾", ctx.author)
-                await message.remove_reaction("❌", ctx.author)
                 await get_reg_info(["```fix\n", "\n```"])
-                await message.edit(embed=edit_embed)
-
-                await message.add_reaction(emoji="💾")
-                await message.add_reaction(emoji="❌")
+                await message.edit(embed=edit_embed, components=[[but_next, but_exit]])
 
                 bad_response = True
                 while bad_response:
                     # Get user response. Reaction or message?
                     done, pending = await asyncio.wait([
                         self.client.wait_for("message", check=lambda m: m.author == ctx.author, timeout=60),
-                        self.client.wait_for("reaction_add",
-                                             check=lambda r, u: str(r.emoji) in ["💾", "❌"] and u == ctx.author,
-                                             timeout=61)
+                        self.client.wait_for("button_click", check=lambda b: b.author == ctx.author)
                     ], return_when=asyncio.FIRST_COMPLETED)
 
                     try:
@@ -112,21 +110,22 @@ class Info(commands.Cog, description="Info :scroll:"):
                             future.cancel()
 
                         # Check response type
-                        if type(payload) == tuple:
-                            rxn, usr = payload
+                        if type(payload) == discord_components.interaction.Interaction:
                             # Save reaction continues editing process, if more edits are queue
-                            if str(rxn.emoji) == "💾":
+                            if payload.component.label == "Next":
                                 edit_embed.set_footer(text=f"No changes were made to {param}.")
                                 await get_reg_info(["", ""])
-                                await message.edit(embed=edit_embed)
+                                await payload.respond(type=InteractionType.UpdateMessage, embed=edit_embed)
+
                                 cancel_save, bad_response = False, False
                             # Terminates Command
-                            elif str(rxn.emoji) == "❌":
+                            elif payload.component.label == "Exit":
                                 edit_embed.set_footer(text="COMMAND TERMINATED.")
                                 await get_reg_info(["", ""])
-                                await message.edit(embed=edit_embed)
+                                await payload.respond(type=InteractionType.UpdateMessage, embed=edit_embed,
+                                                      components=[])
                                 return True
-                        elif type(payload) == discord.message.Message:
+                        elif type(payload) == discord_components.message.ComponentMessage:
                             payload.content = payload.content.strip()
                             if param == "Name":
                                 if " " not in payload.content:
@@ -145,25 +144,28 @@ class Info(commands.Cog, description="Info :scroll:"):
                             bad_response = False
                             edit_embed.set_footer(text=f"Save changes to {param}?")
                             await get_reg_info(["```diff\n- ", f"\n+ {payload.content}\n```"])
-                            await message.edit(embed=edit_embed)
+                            await message.edit(embed=edit_embed, components=[[but_save, but_cancel]])
 
                             # Get reaction
                             try:
-                                rxn, usr = await self.client.wait_for(
-                                    "reaction_add", check=lambda r, u: str(r.emoji) in ["💾", "❌"] and u == ctx.author,
-                                    timeout=60)
+                                but_res = await self.client.wait_for(
+                                    "button_click", check=lambda b: b.author == ctx.author, timeout=60)
                             except asyncio.exceptions.TimeoutError:
                                 await timeout()
                                 return True
                             else:
                                 # Saves the response to file
-                                if str(rxn.emoji) == "💾":
+                                if but_res.component.label == "Save":
                                     self.users[user][param] = payload.content
                                     edit_embed.set_footer(text=f"Changes made to {param} saved successfully.")
                                     cancel_save = False
                                 # Does nothing, loops the editing for the same profile parameter
-                                elif str(rxn.emoji) == "❌":
-                                    edit_embed.set_footer()
+                                elif but_res.component.label == "Cancel":
+                                    edit_embed.set_footer(text="")
+                                await but_res.respond(type=InteractionType.UpdateMessage, embed=edit_embed)
+
+        await get_reg_info(["", ""])
+        await message.edit(embed=edit_embed, components=[])
         return False
 
     async def sync_roles(self, ctx):

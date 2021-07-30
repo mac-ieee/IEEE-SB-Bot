@@ -1,6 +1,7 @@
 import asyncio
 import discord
 from discord.ext import commands
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType, component
 import json
 from COGS.info import Info
 from COGS.club import ClubActivities
@@ -37,6 +38,23 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
         else:
             await ctx.channel.purge(limit=1)
             await ctx.channel.purge(limit=arg_num)
+
+    @commands.command(hidden=True)
+    async def test(self, ctx):
+        but = Button(style=ButtonStyle.red, label="FUCKING KYS", emoji="🔥")
+        mymsg = await ctx.send("What Should I do?", components=[
+            [Button(style=ButtonStyle.grey, label="IDC KYS"),
+             Button(style=ButtonStyle.blue, label="KYS"),
+             but,
+             Button(style=ButtonStyle.green, label="KYS Please", disabled=True)]
+        ])
+
+        but_res = await self.client.wait_for("button_click", check=lambda user: user.author == ctx.author)
+        print(type(but_res))
+        print(but_res)
+        if but_res.component.label == "FUCKING KYS":
+            but.disabled = True
+            await but_res.respond(type=InteractionType.UpdateMessage, content="I died", components=[but_res.components])
 
     @commands.command(description="Edits stuff. Use `-edit` to show a list of editables",
                       usage="<profile> <profile parameter>",
@@ -75,7 +93,6 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
 
                 if str(ctx.author.id) in self.info.users:
                     await self.info.edit_prof(ctx, str(ctx.author.id), group)
-                    await ctx.reply("Profile changes made successfully.")
                     with open("users.json", "w") as file:
                         json.dump(self.info.users, file, indent=4)
                 else:
@@ -89,7 +106,6 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
             desc = f"```fix\nProfile:\n\t{profile_params}\n```"
             edit_embed = discord.Embed(title="Edit Options", description=desc, colour=0X2072AA)
             await ctx.send(embed=edit_embed)
-
 
     @clear.error
     async def clear_error(self, ctx, error):
