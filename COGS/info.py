@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
-import os
+import discord_components.interaction
+from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 import json
 import asyncio
 
@@ -47,7 +48,7 @@ class Info(commands.Cog, description="Info :scroll:"):
             print("Someone took too long to respond")
             edit_embed.set_footer(text="No response received. COMMAND TERMINATED.")
             await get_reg_info(["", ""])
-            await message.edit(embed=edit_embed)
+            await message.edit(embed=edit_embed, components=[])
 
         prof_templ = {
             "Name": "<Enter First & Last Names>",
@@ -75,6 +76,10 @@ class Info(commands.Cog, description="Info :scroll:"):
         edit_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         edit_embed.add_field(name="REGISTRATION INFO:", value="-", inline=False)
         await get_reg_info(["", ""])
+        but_next = Button(style=ButtonStyle.grey, label="Next", emoji="➡")
+        but_exit = Button(style=ButtonStyle.red, label="Exit", emoji="✖")
+        but_save = Button(style=ButtonStyle.blue, label="Save", emoji="💾")
+        but_cancel = Button(style=ButtonStyle.red, label="Cancel", emoji="✖")
         message = await ctx.send(embed=edit_embed)
 
         # If no specific profile parameter is indicated, then every profile parameter will be edited
@@ -82,22 +87,15 @@ class Info(commands.Cog, description="Info :scroll:"):
             cancel_save = True
             # Loop profile parameter editing if user cancels on saving. Maybe they made a typo.
             while cancel_save:
-                await message.remove_reaction("💾", ctx.author)
-                await message.remove_reaction("❌", ctx.author)
                 await get_reg_info(["```fix\n", "\n```"])
-                await message.edit(embed=edit_embed)
-
-                await message.add_reaction(emoji="💾")
-                await message.add_reaction(emoji="❌")
+                await message.edit(embed=edit_embed, components=[[but_next, but_exit]])
 
                 bad_response = True
                 while bad_response:
                     # Get user response. Reaction or message?
                     done, pending = await asyncio.wait([
                         self.client.wait_for("message", check=lambda m: m.author == ctx.author, timeout=60),
-                        self.client.wait_for("reaction_add",
-                                             check=lambda r, u: str(r.emoji) in ["💾", "❌"] and u == ctx.author,
-                                             timeout=61)
+                        self.client.wait_for("button_click", check=lambda b: b.author == ctx.author)
                     ], return_when=asyncio.FIRST_COMPLETED)
 
                     try:
@@ -112,21 +110,22 @@ class Info(commands.Cog, description="Info :scroll:"):
                             future.cancel()
 
                         # Check response type
-                        if type(payload) == tuple:
-                            rxn, usr = payload
+                        if type(payload) == discord_components.interaction.Interaction:
                             # Save reaction continues editing process, if more edits are queue
-                            if str(rxn.emoji) == "💾":
+                            if payload.component.label == "Next":
                                 edit_embed.set_footer(text=f"No changes were made to {param}.")
                                 await get_reg_info(["", ""])
-                                await message.edit(embed=edit_embed)
+                                await payload.respond(type=InteractionType.UpdateMessage, embed=edit_embed)
+
                                 cancel_save, bad_response = False, False
                             # Terminates Command
-                            elif str(rxn.emoji) == "❌":
+                            elif payload.component.label == "Exit":
                                 edit_embed.set_footer(text="COMMAND TERMINATED.")
                                 await get_reg_info(["", ""])
-                                await message.edit(embed=edit_embed)
+                                await payload.respond(type=InteractionType.UpdateMessage, embed=edit_embed,
+                                                      components=[])
                                 return True
-                        elif type(payload) == discord.message.Message:
+                        elif type(payload) == discord_components.message.ComponentMessage:
                             payload.content = payload.content.strip()
                             if param == "Name":
                                 if " " not in payload.content:
@@ -145,25 +144,28 @@ class Info(commands.Cog, description="Info :scroll:"):
                             bad_response = False
                             edit_embed.set_footer(text=f"Save changes to {param}?")
                             await get_reg_info(["```diff\n- ", f"\n+ {payload.content}\n```"])
-                            await message.edit(embed=edit_embed)
+                            await message.edit(embed=edit_embed, components=[[but_save, but_cancel]])
 
-                            # Get reaction
+                            # Get Button Response
                             try:
-                                rxn, usr = await self.client.wait_for(
-                                    "reaction_add", check=lambda r, u: str(r.emoji) in ["💾", "❌"] and u == ctx.author,
-                                    timeout=60)
+                                but_res = await self.client.wait_for(
+                                    "button_click", check=lambda b: b.author == ctx.author, timeout=60)
                             except asyncio.exceptions.TimeoutError:
                                 await timeout()
                                 return True
                             else:
                                 # Saves the response to file
-                                if str(rxn.emoji) == "💾":
+                                if but_res.component.label == "Save":
                                     self.users[user][param] = payload.content
                                     edit_embed.set_footer(text=f"Changes made to {param} saved successfully.")
                                     cancel_save = False
                                 # Does nothing, loops the editing for the same profile parameter
-                                elif str(rxn.emoji) == "❌":
-                                    edit_embed.set_footer()
+                                elif but_res.component.label == "Cancel":
+                                    edit_embed.set_footer(text="")
+                                await but_res.respond(type=InteractionType.UpdateMessage, embed=edit_embed)
+
+        await get_reg_info(["", ""])
+        await message.edit(embed=edit_embed, components=[])
         return False
 
     async def sync_roles(self, ctx):
@@ -177,29 +179,44 @@ class Info(commands.Cog, description="Info :scroll:"):
                         name=group, permissions=ctx.guild.default_role.permissions, hoist=True,
                         reason="Guild Role Not Found")
 
-    async def disp_branches(self, ctx, branch, group):
+    async def disp_branch(self, ctx, branch, group, leader):
         if group:
-            await self.disp_groups(ctx, branch, group)
+            await self.disp_group(ctx, branch, group, leader)
         else:
             num_groups = 0
-            groups_embed = discord.Embed(title=f"List of {branch}s", colour=0X2072AA)
+            group_list = ""
+            for group in self.roles_list[branch]:
+                group_list += f"> {group}  {self.roles_list[branch][group]['Logo']}\n"
+                num_groups += 1
+            groups_embed = discord.Embed(title=f"List of {branch}s", description=group_list, colour=0X2072AA)
             groups_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
             groups_embed.set_footer(text=f"For more information, use -{branch} <{branch} type>")
-            for group in self.roles_list[branch]:
-                groups_embed.add_field(
-                    name=f"{group}  {self.roles_list[branch][group]['Logo']}",
-                    value=self.roles_list[branch][group]["Description"], inline=False)
-                num_groups += 1
             if num_groups == 1:
-                await self.disp_groups(ctx, branch, branch)
+                await self.disp_group(ctx, branch, branch, leader)
             else:
                 await ctx.send(embed=groups_embed)
 
-    async def disp_groups(self, ctx, branch, group):
+    async def disp_group(self, ctx, branch, group, leader):
         # Filter Group
+        match = False
         for g in self.roles_list[branch]:
             if group.lower() in g.lower():
-                group = g
+                group, match = g, True
+                break
+        # End command if no filtered result
+        if not match:
+            return await ctx.reply(f"\"{group}\" is not a \"{branch}\"")
+        elif leader:
+            match = False
+            # Filter leaders
+            for l in self.roles_list[branch][group]["Leaders"]:
+                if leader.lower() in l.lower():
+                    leader, match = l, True
+                    break
+            if not match:
+                return await ctx.reply(f"\"{leader}\" is not a recognisable option in \"{group}\"")
+            else:
+                return await self.disp_leader(ctx, branch, group, leader)
 
         try:
             # Group Info
@@ -246,6 +263,19 @@ class Info(commands.Cog, description="Info :scroll:"):
         except KeyError:
             await ctx.reply(f"The specific {branch} you were looking for cannot be resolved")
 
+    async def disp_leader(self, ctx, branch, group, leader):
+        leader_list_raw = self.roles_list[branch][group]["Leaders"][leader]["DiscordID"].split(", ")
+        leader_list = f"**{leader}:** {' '.join([id.join(['<@', '>']) for id in leader_list_raw])}\n"
+        if len(leader_list_raw) > 1:
+            url = self.roles_list[branch][group]["Thumbnail"]
+        else:
+            user = await self.client.fetch_user(int(leader_list_raw[0]))
+            url = user.avatar_url
+        lead_embed = discord.Embed(title=f"{group} {leader}", description=f"{leader_list}\n\n**DESCRIPTION:**\n{self.roles_list[branch][group]['Leaders'][leader]['Description']}", colour=0X2072AA)
+        lead_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        lead_embed.set_thumbnail(url=url)
+        await ctx.send(embed=lead_embed)
+
     @commands.command(description="PMs you the server's official rules")
     async def rules(self, ctx):
         rules = open(r"Information/rules.txt", "r")
@@ -281,21 +311,21 @@ class Info(commands.Cog, description="Info :scroll:"):
             await ctx.send(f"{ctx.author.mention} killed themself")
 
     @commands.command(description="Shows the upper echelon that runs and maintains IEEE Student Branch")
-    async def mainbranch(self, ctx, *, group=None):
+    async def mainbranch(self, ctx, group=None, *, leader=None):
         await self.sync_roles(ctx)
-        await self.disp_branches(ctx, "Main Branch", group)
+        await self.disp_branch(ctx, "Main Branch", group, leader)
 
     @commands.command(description="Shows all joinable Chapters and their descriptions.",
                       aliases=["chapters", "chap", "chaps"])
-    async def chapter(self, ctx, *, group=None):
+    async def chapter(self, ctx, group=None, *, leader=None):
         await self.sync_roles(ctx)
-        await self.disp_branches(ctx, "Chapter", group)
+        await self.disp_branch(ctx, "Chapter", group, leader)
 
     @commands.command(description="Shows all joinable Committees and their descriptions.",
                       aliases=["committees", "comm", "comms"])
-    async def committee(self, ctx, *, group=None):
+    async def committee(self, ctx, group=None, *, leader=None):
         await self.sync_roles(ctx)
-        await self.disp_branches(ctx, "Committee", group)
+        await self.disp_branch(ctx, "Committee", group, leader)
 
 
 def setup(client):
