@@ -6,23 +6,23 @@
             "Description": "<Description>",
             "Private": "True",
             "Leaders": {
-                "Branch Chair": {
+                "Chair": {
                     "DiscordID": "109423134960029696",
                     "Description": "<Description>"
                 },
-                "Branch Vice-Chair": {
+                "Vice-Chair": {
                     "DiscordID": "109423134960029696",
                     "Description": "<Description>"
                 },
-                "Branch Secretary": {
+                "Secretary": {
                     "DiscordID": "109423134960029696",
                     "Description": "<Description>"
                 },
-                "Branch Treasurer": {
+                "Treasurer": {
                     "DiscordID": "109423134960029696",
                     "Description": "<Description>"
                 },
-                "Branch Mentor": {
+                "Mentor": {
                     "DiscordID": "109423134960029696",
                     "Description": "<Description>"
                 }
@@ -31,14 +31,14 @@
     },
     "Chapter": {
         "Computer Chapter": {
-            "Logo": ":desktop:",
+            "Logo": "<:fireball:766987229713006619>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/813848518891798588.png?v=1",
             "Description": "<Description>",
             "Private": "False",
             "Leaders": {
                 "Chair": {
                     "DiscordID": "109423134960029696",
-                    "Description": "<Description>"
+                    "Description": "Qalvin is mad scientist. Qalvin is so cool. sunovobich"
                 },
                 "Vice-Chairs": {
                     "DiscordID": "378197941128527877, 397253245615210506",

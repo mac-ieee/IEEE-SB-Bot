@@ -1,6 +1,6 @@
 import discord
-import discord_components.interaction
 from discord.ext import commands
+import discord_components.interaction
 from discord_components import DiscordComponents, Button, ButtonStyle, InteractionType
 import json
 import asyncio
@@ -146,7 +146,7 @@ class Info(commands.Cog, description="Info :scroll:"):
                             await get_reg_info(["```diff\n- ", f"\n+ {payload.content}\n```"])
                             await message.edit(embed=edit_embed, components=[[but_save, but_cancel]])
 
-                            # Get reaction
+                            # Get Button Response
                             try:
                                 but_res = await self.client.wait_for(
                                     "button_click", check=lambda b: b.author == ctx.author, timeout=60)
@@ -179,35 +179,44 @@ class Info(commands.Cog, description="Info :scroll:"):
                         name=group, permissions=ctx.guild.default_role.permissions, hoist=True,
                         reason="Guild Role Not Found")
 
-    async def disp_branches(self, ctx, branch, group):
+    async def disp_branch(self, ctx, branch, group, leader):
         if group:
-            await self.disp_groups(ctx, branch, group)
+            await self.disp_group(ctx, branch, group, leader)
         else:
             num_groups = 0
-            groups_embed = discord.Embed(title=f"List of {branch}s", colour=0X2072AA)
+            group_list = ""
+            for group in self.roles_list[branch]:
+                group_list += f"> {group}  {self.roles_list[branch][group]['Logo']}\n"
+                num_groups += 1
+            groups_embed = discord.Embed(title=f"List of {branch}s", description=group_list, colour=0X2072AA)
             groups_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
             groups_embed.set_footer(text=f"For more information, use -{branch} <{branch} type>")
-            for group in self.roles_list[branch]:
-                groups_embed.add_field(
-                    name=f"{group}  {self.roles_list[branch][group]['Logo']}",
-                    value=self.roles_list[branch][group]["Description"], inline=False)
-                num_groups += 1
             if num_groups == 1:
-                await self.disp_groups(ctx, branch, branch)
+                await self.disp_group(ctx, branch, branch, leader)
             else:
                 await ctx.send(embed=groups_embed)
 
-    async def disp_groups(self, ctx, branch, group):
+    async def disp_group(self, ctx, branch, group, leader):
         # Filter Group
         match = False
         for g in self.roles_list[branch]:
             if group.lower() in g.lower():
                 group, match = g, True
                 break
-
         # End command if no filtered result
         if not match:
             return await ctx.reply(f"\"{group}\" is not a \"{branch}\"")
+        elif leader:
+            match = False
+            # Filter leaders
+            for l in self.roles_list[branch][group]["Leaders"]:
+                if leader.lower() in l.lower():
+                    leader, match = l, True
+                    break
+            if not match:
+                return await ctx.reply(f"\"{leader}\" is not a recognisable option in \"{group}\"")
+            else:
+                return await self.disp_leader(ctx, branch, group, leader)
 
         try:
             # Group Info
@@ -254,6 +263,19 @@ class Info(commands.Cog, description="Info :scroll:"):
         except KeyError:
             await ctx.reply(f"The specific {branch} you were looking for cannot be resolved")
 
+    async def disp_leader(self, ctx, branch, group, leader):
+        leader_list_raw = self.roles_list[branch][group]["Leaders"][leader]["DiscordID"].split(", ")
+        leader_list = f"**{leader}:** {' '.join([id.join(['<@', '>']) for id in leader_list_raw])}\n"
+        if len(leader_list_raw) > 1:
+            url = self.roles_list[branch][group]["Thumbnail"]
+        else:
+            user = await self.client.fetch_user(int(leader_list_raw[0]))
+            url = user.avatar_url
+        lead_embed = discord.Embed(title=f"{group} {leader}", description=f"{leader_list}\n\n**DESCRIPTION:**\n{self.roles_list[branch][group]['Leaders'][leader]['Description']}", colour=0X2072AA)
+        lead_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        lead_embed.set_thumbnail(url=url)
+        await ctx.send(embed=lead_embed)
+
     @commands.command(description="PMs you the server's official rules")
     async def rules(self, ctx):
         rules = open(r"Information/rules.txt", "r")
@@ -289,21 +311,21 @@ class Info(commands.Cog, description="Info :scroll:"):
             await ctx.send(f"{ctx.author.mention} killed themself")
 
     @commands.command(description="Shows the upper echelon that runs and maintains IEEE Student Branch")
-    async def mainbranch(self, ctx, *, group=None):
+    async def mainbranch(self, ctx, group=None, *, leader=None):
         await self.sync_roles(ctx)
-        await self.disp_branches(ctx, "Main Branch", group)
+        await self.disp_branch(ctx, "Main Branch", group, leader)
 
     @commands.command(description="Shows all joinable Chapters and their descriptions.",
                       aliases=["chapters", "chap", "chaps"])
-    async def chapter(self, ctx, *, group=None):
+    async def chapter(self, ctx, group=None, *, leader=None):
         await self.sync_roles(ctx)
-        await self.disp_branches(ctx, "Chapter", group)
+        await self.disp_branch(ctx, "Chapter", group, leader)
 
     @commands.command(description="Shows all joinable Committees and their descriptions.",
                       aliases=["committees", "comm", "comms"])
-    async def committee(self, ctx, *, group=None):
+    async def committee(self, ctx, group=None, *, leader=None):
         await self.sync_roles(ctx)
-        await self.disp_branches(ctx, "Committee", group)
+        await self.disp_branch(ctx, "Committee", group, leader)
 
 
 def setup(client):

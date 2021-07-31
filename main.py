@@ -40,7 +40,7 @@ class CustomHelpCommand(commands.HelpCommand):
         if command.aliases:
             help_embed.add_field(name="Aliases", value="".join([f"`{alias}`\n" for alias in command.aliases]))
         if command.help is not None:
-            help_embed.add_field(name="Requirements", value=f"```fix\n{command.help}\n```", inline=True)
+            help_embed.add_field(name="Requirements", value=f"```fix\n{command.help}\n```", inline=False)
         await self.get_destination().send(embed=help_embed)
 
 
