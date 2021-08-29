@@ -179,6 +179,10 @@ class Info(commands.Cog, description="Info :scroll:"):
                         name=group, permissions=ctx.guild.default_role.permissions, hoist=True,
                         reason="Guild Role Not Found")
 
+        if "Volunteer" not in str(ctx.guild.roles):
+            await ctx.guild.create_role(name="Volunteer", permissions=ctx.guild.default_role.permissions, hoist=False,
+                                        reason="Guild Role Not Found")
+
     async def disp_branch(self, ctx, branch, group, leader):
         if group:
             await self.disp_group(ctx, branch, group, leader)
@@ -252,6 +256,8 @@ class Info(commands.Cog, description="Info :scroll:"):
                     await ctx.author.add_roles(group_role)
                 else:
                     await response.reply(f"You are already in {group_role}")
+                if len(ctx.author.roles) >= 1:
+                    await ctx.author.remove_roles(discord.utils.get(ctx.guild.roles, name="Volunteer"))
             elif response.content == "leave":
                 if self.roles_list[branch][group]["Private"] == "True":
                     await response.reply(f"Please contact {ctx.guild.owner.mention} to resign from {branch}")
@@ -260,6 +266,8 @@ class Info(commands.Cog, description="Info :scroll:"):
                     await ctx.author.remove_roles(group_role)
                 else:
                     await response.reply(f"You were never a part of {group_role}")
+                if len(ctx.author.roles) <= 1:
+                    await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Volunteer"))
         except KeyError:
             await ctx.reply(f"The specific {branch} you were looking for cannot be resolved")
 
@@ -301,7 +309,16 @@ class Info(commands.Cog, description="Info :scroll:"):
             self.users[str(ctx.author.id)]["Coins"] = 500
             with open("users.json", "w") as file:
                 json.dump(self.users, file, indent=4)
+
+            if len(ctx.author.roles) <= 1:
+                await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Volunteer"))
             await ctx.reply("You have successfully registered!")
+            await ctx.author.send("Welcome to IEEE McMaster Student Branch! Please read our official rules below:")
+            await asyncio.sleep(3)
+            await self.rules(ctx)
+            await asyncio.sleep(30)
+            await ctx.author.send("Your current role in our club is ***'Volunteer'***. As you join committees or "
+                                  "chapters, this role will change.")
 
     @commands.command(hidden=True)
     async def kill(self, ctx, victim: discord.User = None):
