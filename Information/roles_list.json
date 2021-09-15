@@ -68,9 +68,13 @@
             "Description": "kawaii chapter for kawaii people",
             "Private": "False",
             "Leaders": {
-                "Coordinator": {
+                "Chair": {
                     "DiscordID": "187716595320225793",
                     "Description": "Edward is very kawaii"
+                },
+                "Vice-Chair": {
+                    "DiscordID": "542479593656025113",
+                    "Description": "Evan is also very kawaii, but not as kawaii  as Edward"
                 }
             }
         }
