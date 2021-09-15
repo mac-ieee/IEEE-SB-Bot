@@ -201,6 +201,15 @@ class Info(commands.Cog, description="Info :scroll:"):
                 await ctx.send(embed=groups_embed)
 
     async def disp_group(self, ctx, branch, group, leader):
+        async def get_members():
+            member_list = ""
+            for member in ctx.guild.members:
+                if group_role in member.roles:
+                    member_list += f"{member.mention} "
+            if member_list == "":
+                member_list = "None"
+            group_embed.set_field_at(index=2, name="MEMBERS:", value=member_list, inline=False)
+
         # Filter Group
         match = False
         for g in self.roles_list[branch]:
@@ -222,10 +231,14 @@ class Info(commands.Cog, description="Info :scroll:"):
             else:
                 return await self.disp_leader(ctx, branch, group, leader)
 
+        # Button Init
+        but_join = Button(style=ButtonStyle.green, label="Join", emoji="🖋️")
+        but_resign = Button(style=ButtonStyle.red, label="Resign", emoji="🛑")
+        but_cancel = Button(style=ButtonStyle.grey, label="Cancel", emoji="❌")
+
         try:
             # Group Info
             group_embed = discord.Embed(title=group, colour=0X2072AA)
-            group_embed.set_footer(text=f"To join/leave {group}, type 'join' or 'leave'")
             group_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
             group_embed.set_thumbnail(url=self.roles_list[branch][group]["Thumbnail"])
             leader_list = ""
@@ -236,38 +249,45 @@ class Info(commands.Cog, description="Info :scroll:"):
                 leader_list = "None"
             group_embed.add_field(name="LEADERS:", value=leader_list)
             group_embed.add_field(name="DESCRIPTION:", value=self.roles_list[branch][group]["Description"], inline=False)
-            member_list = ""
+            group_embed.add_field(name="MEMBERS", value="None", inline=False)
             group_role = discord.utils.get(ctx.guild.roles, name=group)
-            for member in ctx.guild.members:
-                if group_role in member.roles:
-                    member_list += f"{member.mention} "
-            if member_list == "":
-                member_list = "None"
-            group_embed.add_field(name="MEMBERS:", value=member_list, inline=False)
-            await ctx.send(embed=group_embed)
+            await get_members()
+            message = await ctx.send(embed=group_embed, components=[[but_join, but_resign, but_cancel]])
 
-            # Join/Leave
-            response = await self.client.wait_for("message", check=lambda message: message.author == ctx.author)
-            if response.content == "join":
-                if self.roles_list[branch][group]["Private"] == "True":
-                    await response.reply(f"You cannot join a private branch/group")
-                elif group_role not in ctx.author.roles:
-                    await response.reply(f"You have joined {group_role}")
-                    await ctx.author.add_roles(group_role)
-                else:
-                    await response.reply(f"You are already in {group_role}")
-                if len(ctx.author.roles) >= 1:
-                    await ctx.author.remove_roles(discord.utils.get(ctx.guild.roles, name="Volunteer"))
-            elif response.content == "leave":
-                if self.roles_list[branch][group]["Private"] == "True":
-                    await response.reply(f"Please contact {ctx.guild.owner.mention} to resign from {branch}")
-                elif group_role in ctx.author.roles:
-                    await response.reply(f"You have resigned from {group_role}")
-                    await ctx.author.remove_roles(group_role)
-                else:
-                    await response.reply(f"You were never a part of {group_role}")
-                if len(ctx.author.roles) <= 1:
-                    await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Volunteer"))
+            # Join/Resign
+            try:
+                but_choice = await self.client.wait_for("button_click", check=lambda b: b.author == ctx.author, timeout=60)
+                if but_choice.component.label == "Join":
+                    if str(ctx.author.id) not in self.users:
+                        group_embed.set_footer(text="ERROR: Registration not found! Please register with -register")
+                    elif self.roles_list[branch][group]["Private"] == "True":
+                        group_embed.set_footer(text="You cannot join a private branch/group")
+                    elif group_role not in ctx.author.roles:
+                        await ctx.author.add_roles(group_role)
+                        group_embed.set_footer(text=f"You have joined {group_role}")
+                        await get_members()
+                    else:
+                        group_embed.set_footer(text=f"You are already in {group_role}")
+                    if len(ctx.author.roles) >= 1:
+                        await ctx.author.remove_roles(discord.utils.get(ctx.guild.roles, name="Volunteer"))
+                elif but_choice.component.label == "Resign":
+                    if self.roles_list[branch][group]["Private"] == "True":
+                        group_embed.set_footer(text=f"Please contact {ctx.guild.owner.mention} to resign from {branch}")
+                    elif group_role in ctx.author.roles:
+                        await ctx.author.remove_roles(group_role)
+                        group_embed.set_footer(text=f"You have resigned from {group_role}")
+                        await get_members()
+                    else:
+                        group_embed.set_footer(text=f"You were never a part of {group_role}")
+                    if len(ctx.author.roles) <= 1:
+                        await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Volunteer"))
+                elif but_choice.component.label == "Cancel":
+                    group_embed.set_footer(text="COMMAND TERMINATED")
+                await but_choice.respond(type=InteractionType.UpdateMessage, embed=group_embed, components=[])
+            except asyncio.TimeoutError:
+                group_embed.set_footer(text="No response received. COMMAND TERMINATED.")
+            await message.edit(embed=group_embed, components=[])
+
         except KeyError:
             await ctx.reply(f"The specific {branch} you were looking for cannot be resolved")
 

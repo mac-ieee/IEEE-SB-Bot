@@ -18,7 +18,12 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
         self.editable_cmds = {"Profile": ClubActivities.profile}
         self.editable_cmds.update(self.info.new_cmds)
 
+
     async def edit_group(self, ctx, cat, group):
+        elevation = discord.utils.get(ctx.guild.roles, name="Executives")
+        if str(ctx.author.id) not in str(self.info.roles_list[cat][group]["Leaders"]) and elevation not in ctx.author.roles:
+            return await ctx.reply(f"Editing \"{cat} > {group}\" requires elevated permissions.")
+
         async def timeout():
             print("Someone took too long to respond")
             edit_embed.set_footer(text="No response received. COMMAND TERMINATED.")
@@ -128,6 +133,10 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
         return False
 
     async def edit_leader(self, ctx, cat, group, leader):
+        elevation = discord.utils.get(ctx.guild.roles, name="Executives")
+        if str(ctx.author.id) not in self.info.roles_list[cat][group]["Leaders"][leader]["DiscordID"] and elevation not in ctx.author.roles:
+            return ctx.reply(f"Editing \"{cat} > {group} > {leader} requires elevated permissions.\"")
+
         async def timeout():
             print("Someone took too long to respond")
             edit_embed.set_footer(text="No response received. COMMAND TERMINATED.")
@@ -229,8 +238,8 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
                                   "If no value is specified, 1 message will be deleted by default.",
                       usage="<integer>",
                       brief="clear\nclear 10",
-                      help="User: Exec Role\nBot: Manage Messages")
-    @commands.has_role("Exec")
+                      help="User: Executives Role\nBot: Manage Messages")
+    @commands.has_role("Executives")
     async def clear(self, ctx, arg_num=1):
         if arg_num > 1000 or arg_num < 1:
             await ctx.send(f"{ctx.author.mention}  You can only delete 1 - 1000 messages")
@@ -258,7 +267,7 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
     @commands.command(description="Edits stuff. Use `-edit` to show a list of editables",
                       usage="<Main Arg.> <Sub Arg.> <Sub Arg.>",
                       brief="edit chapter computer\nedit chapter computer chair",
-                      help="Bot: Manage Messages")
+                      help="User (Elevated): Executive Role or the leadership of the role/position in question\nBot: Manage Messages")
     async def edit(self, ctx, cat=None, group=None, *, leader=None):
         with open(r"Information/roles_list.json", "r") as file:
             self.info.roles_list = json.load(file)
@@ -349,7 +358,7 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
     @clear.error
     async def clear_error(self, ctx, error):
         if isinstance(error, commands.MissingRole):
-            await ctx.send(f"{ctx.author.mention}  **ERROR:** You need to be an **Exec** to clear messages")
+            await ctx.send(f"{ctx.author.mention}  **ERROR:** You need to be an **Executives** to clear messages")
         elif isinstance(error, commands.BadArgument):
             await ctx.send(f"{ctx.author.mention}  **ERROR:** Incorrect usage")
         else:
