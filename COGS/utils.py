@@ -294,6 +294,13 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
                     if group.lower() in g.lower():
                         group, match = g, True
                         break
+
+                # Error Correction for e.g.: "-chapter computer chapter"
+                if leader:
+                    ec = leader.split()
+                    if ec[0] in group.lower():
+                        leader = leader[len(ec[0]):].strip()
+
                 if not match:
                     return await ctx.reply(f"\"{group}\" is not a recognisable option in \"{cat}\"")
                 elif leader:
