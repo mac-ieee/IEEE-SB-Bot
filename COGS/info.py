@@ -216,6 +216,15 @@ class Info(commands.Cog, description="Info :scroll:"):
             if group.lower() in g.lower():
                 group, match = g, True
                 break
+
+        # Error Correction for e.g.: "-chapter computer chapter"
+        if leader:
+            ec = leader.split()
+            print(ec)
+            if ec[0] in group.lower():
+                leader = leader[len(ec[0]):].strip()
+                print(f"{leader=}")
+
         # End command if no filtered result
         if not match:
             return await ctx.reply(f"\"{group}\" is not a \"{branch}\"")
