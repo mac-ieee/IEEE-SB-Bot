@@ -117,18 +117,6 @@
                 }
             }
         },
-        "Workshop Committee": {
-            "Logo": "<:workshop:776205171130368061>",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",
-            "Description": "The Workshop Committee is invested in providing opportunities for students who have a desire to learn outside the traditional classroom environment. Our mission is to inspire students to think outside the box by offering a range of in-depth training modules, interactive activities and guided mentorship on a variety of skill-building topics to promote personal and professional growth.",
-            "Private": "False",
-            "Leaders": {
-                "Head": {
-                    "DiscordID": "None",
-                    "Description": "<Description>"
-                }
-            }
-        },
         "Public Relations Committee": {
             "Logo": "<:workshop:776205171130368061>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",

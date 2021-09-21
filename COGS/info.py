@@ -220,7 +220,7 @@ class Info(commands.Cog, description="Info :scroll:"):
         # Error Correction for e.g.: "-chapter computer chapter"
         if leader:
             ec = leader.split()
-            if ec[0] in group.lower():
+            if ec[0].lower() in group.lower():
                 leader = leader[len(ec[0]):].strip()
 
         # End command if no filtered result
