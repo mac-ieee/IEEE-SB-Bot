@@ -33,7 +33,7 @@
         "Computer Chapter": {
             "Logo": ":desktop:",
             "Thumbnail": "https://cdn.discordapp.com/emojis/813848518891798588.png?v=1",
-            "Description": "<Description>",
+            "Description": "The Computer Chapter develops software and hardware technical workshops, providing opportunities for its members to learn and develop new skills, including working with Arduinos, Raspberry Pis, Python, JavaScript, C, APIs, Computer Vision, Web Development and more!",
             "Private": "False",
             "Leaders": {
                 "Chair": {
@@ -65,7 +65,7 @@
         "PES Chapter": {
             "Logo": ":zap:",
             "Thumbnail": "https://cdn.discordapp.com/emojis/813848518468304956.png?v=1",
-            "Description": "kawaii chapter for kawaii people",
+            "Description": "The Power and Energy Society is a hub for students interested in the bulk electric system, energy generation, bulk equipment, power electronics, etc. We organize workshops aimed towards these interests and hope to network and create a social community!",
             "Private": "False",
             "Leaders": {
                 "Chair": {
@@ -84,7 +84,7 @@
             "Logo": "<:discord:776205209046482995>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/776205209046482995.png?v=1",
             "Group": "Committee",
-            "Description": "<Description>",
+            "Description": "The Discord Committee works mostly on programming the  <@!766060781383974913>, used to help manage information about the IEEE McMaster Student Branch. Using Python and the Discord API, beginner to novice programmers have the opportunity to learn how to read API documentation and implement them into their code, as well as learning how to upload code into GitHub. Additional responsibilities include: moderating the server and assisting new users on how to use Discord and/or <@!766060781383974913>.",
             "Private": "False",
             "Leaders": {
                 "Head": {
