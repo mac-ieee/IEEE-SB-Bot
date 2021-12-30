@@ -73,7 +73,7 @@ class Moderation(commands.Cog, description="Moderation :oncoming_police_car:"):
         elif "omae was mou shindeiru" in msg.content.strip().lower() and not msg.author.bot:
             await msg.reply("NANI?!", mention_author=True)
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def die(self, ctx):
         await Utilities.ping(self, ctx)
 

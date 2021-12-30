@@ -85,7 +85,7 @@
     },
     "Committee": {
         "Discord Committee": {
-            "Logo": "<:discord:776205209046482995>",
+            "Logo": "<:discord:925960375978061934>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/776205209046482995.png?v=1",
             "Group": "Committee",
             "Description": "The Discord Committee works mostly on programming the  <@!766060781383974913>, used to help manage information about the IEEE McMaster Student Branch. Using Python and the Discord API, beginner to novice programmers have the opportunity to learn how to read API documentation and implement them into their code, as well as learning how to upload code into GitHub. Additional responsibilities include: moderating the server and assisting new users on how to use Discord and/or <@!766060781383974913>.",
@@ -98,7 +98,7 @@
             }
         },
         "Social Committee": {
-            "Logo": "<:social:776205198371979325>",
+            "Logo": "<:social:925960375571193928>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/776205198371979325.png?v=1",
             "Description": "The social committee plans and organizes social events within the IEEE-SB to engage and connect members.",
             "Private": "False",
@@ -110,7 +110,7 @@
             }
         },
         "Website Committee": {
-            "Logo": "<:website:776205187349086290>",
+            "Logo": "<:website:925960375487311872>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/776205187349086290.png?v=1",
             "Description": "The website committee is responsible for the creation and upkeep of the McMaster IEEE Student Branch's website. The website serves as a collaborative effort from all committees of the IEEE Student Branch, as it will be used to advertise information collection from throughout the student branch. Members of the website committee specifically, will have the chance to learn or consolidate their website building and maintenance skills.",
             "Private": "False",
@@ -122,7 +122,7 @@
             }
         },
         "Public Relations Committee": {
-            "Logo": "<:workshop:776205171130368061>",
+            "Logo": "<:pr:925960375541846037>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",
             "Description": "The Public Relations committee is committed to growing the McMaster IEEE Student Branch network, including students, alumni, and companies. With creative designs, merchandise, and regular activity on social media, we are able to engage with students to create interest in upcoming events and our club. Furthermore, we actively pursue sponsorships to build relationships with companies and to bring even more interesting events.",
             "Private": "False",

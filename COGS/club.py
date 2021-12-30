@@ -5,7 +5,7 @@ import asyncio
 from COGS.info import Info, ForcedInteruptError
 
 
-class ClubActivities(commands.Cog, description="Club Activities  <:fireball:766987229713006619>"):
+class ClubActivities(commands.Cog, description="Club Activities  <:fireball:925965520610684958>"):
     def __init__(self, client):
         self.client = client
         self.info = Info(self.client)
