@@ -249,20 +249,20 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
 
     @commands.command(hidden=True)
     async def test(self, ctx):
-        but = Button(style=ButtonStyle.red, label="FUCKING KYS", emoji="🔥")
-        mymsg = await ctx.send("What Should I do?", components=[
-            [Button(style=ButtonStyle.grey, label="IDC KYS"),
-             Button(style=ButtonStyle.blue, label="KYS"),
+        but = Button(style=ButtonStyle.red, label="No.", emoji="🔥")
+        mymsg = await ctx.send("Test?", components=[
+            [Button(style=ButtonStyle.grey, label="Test 1"),
+             Button(style=ButtonStyle.blue, label="Test 2"),
              but,
-             Button(style=ButtonStyle.green, label="KYS Please", disabled=True)]
+             Button(style=ButtonStyle.green, label="Test 3", disabled=True)]
         ])
 
         but_res = await self.client.wait_for("button_click", check=lambda user: user.author == ctx.author)
         print(type(but_res))
         print(but_res)
-        if but_res.component.label == "FUCKING KYS":
+        if but_res.component.label == "No.":
             but.disabled = True
-            await but_res.respond(type=InteractionType.UpdateMessage, content="I died", components=[but_res.components])
+            await but_res.respond(type=InteractionType.UpdateMessage, content=":(", components=[but_res.components])
 
     @commands.command(description="Edits stuff. Use `-edit` to show a list of editables",
                       usage="<Main Arg.> <Sub Arg.> <Sub Arg.>",
@@ -344,19 +344,19 @@ class Utilities(commands.Cog, description="Utilities :tools:"):
                     "Exactly what are you trying to edit? Please try again. See \"-edit\" for a list of editables.")
 
         else:
-            desc = f"Turquoise are valid arguments\n```bash\n"
+            desc = f"Valid Arguments. See `-help edit` for usage examples.\n```\n"
             profile_params = f", ".join([param for param in indexed_info['Profile']])
-            desc += f"\"Profile\":\n\t\"{profile_params}\"\n\n"
+            desc += f"Profile:\n\t{profile_params}\n\n"
             main_params = f", ".join([leader for leader in indexed_info['Main Branch']['Main Branch']['Leaders']])
-            desc += f"\"Main\":\n\t\"{main_params}\"\n\n"
+            desc += f"Main:\n\t{main_params}\n\n"
             chapter_params = f"\n\t".join(
                 [f"{chapter}:\n\t\t{', '.join([leader for leader in indexed_info['Chapter'][chapter]['Leaders']])}" for
                  chapter in indexed_info['Chapter']])
-            desc += f"Chapter:\n\t\"{chapter_params}\"\n\n"
+            desc += f"{chapter_params}\n\n"
             comm_params = f"\n\t".join(
                 [f"{comm}:\n\t\t{', '.join([leader for leader in indexed_info['Committee'][comm]['Leaders']])}" for
                  comm in indexed_info['Committee']])
-            desc += f"Committee:\n\t\"{comm_params}\"\n"
+            desc += f"{comm_params}\n"
             desc += f"```"
 
             edit_embed = discord.Embed(title="Edit Options", description=desc, colour=0X2072AA)

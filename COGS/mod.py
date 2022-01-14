@@ -14,7 +14,9 @@ class Moderation(commands.Cog, description="Moderation :oncoming_police_car:"):
         self.swear_dictionary = open(
             r"Information/swear_dictionary.txt", "r")
 
+    @commands.Cog.listener()
     async def on_message(self, msg):
+        """
         self.swear_dictionary.seek(0)
         for swear in self.swear_dictionary.readlines():
             if swear.strip().lower() in msg.content.lower() and not msg.author.bot:
@@ -57,7 +59,7 @@ class Moderation(commands.Cog, description="Moderation :oncoming_police_car:"):
                     await msg.channel.send(f"{msg.author.mention}, you can't say that"
                                            f" [{temp_users[str(msg.author.id)]['Offences']}/3]")
                 break
-
+        """
         if "prepare for trouble" in msg.content.strip().lower():
             await msg.channel.send("AND MAKE IT DOUBLE!")
         elif "to protect the world from devastation" in msg.content.strip().lower():
@@ -70,7 +72,7 @@ class Moderation(commands.Cog, description="Moderation :oncoming_police_car:"):
             await msg.channel.send("SURRENDER NOW OR PREPARE TO FIGHT")
         elif "ehe" in msg.content.strip().lower() and not msg.author.bot:
             await msg.reply("\"EHE\", TE NANDAYO?!", mention_author=True)
-        elif "omae was mou shindeiru" in msg.content.strip().lower() and not msg.author.bot:
+        elif "omae wa mou shindeiru" in msg.content.strip().lower() and not msg.author.bot:
             await msg.reply("NANI?!", mention_author=True)
 
     @commands.command(hidden=True)

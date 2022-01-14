@@ -31,8 +31,8 @@
     },
     "Chapter": {
         "Computer Chapter": {
-            "Logo": ":desktop:",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/813848518891798588.png?v=1",
+            "Logo": "<:cs:926019599655391264>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/926019599655391264.png?",
             "Description": "The Computer Chapter develops software and hardware technical workshops, providing opportunities for its members to learn and develop new skills, including working with Arduinos, Raspberry Pis, Python, JavaScript, C, APIs, Computer Vision, Web Development and more!",
             "Private": "False",
             "Leaders": {
@@ -51,8 +51,8 @@
             }
         },
         "EMBS Chapter": {
-            "Logo": ":medical_symbol:",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/813848519261552700.png?v=1",
+            "Logo": "<:embs:926019599911239741>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/926019599911239741.png?",
             "Description": "<Description>",
             "Private": "False",
             "Leaders": {
@@ -63,8 +63,8 @@
             }
         },
         "PES Chapter": {
-            "Logo": ":zap:",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/813848518468304956.png?v=1",
+            "Logo": "<:pes:926019600469069844>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/926019600469069844.png?",
             "Description": "The Power and Energy Society is a hub for students interested in the bulk electric system, energy generation, bulk equipment, power electronics, etc. We organize workshops aimed towards these interests and hope to network and create a social community!",
             "Private": "False",
             "Leaders": {
