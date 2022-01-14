@@ -31,8 +31,8 @@
     },
     "Chapter": {
         "Computer Chapter": {
-            "Logo": ":desktop:",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/813848518891798588.png?v=1",
+            "Logo": "<:cs:926019599655391264>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/926019599655391264.png?",
             "Description": "The Computer Chapter develops software and hardware technical workshops, providing opportunities for its members to learn and develop new skills, including working with Arduinos, Raspberry Pis, Python, JavaScript, C, APIs, Computer Vision, Web Development and more!",
             "Private": "False",
             "Leaders": {
@@ -51,8 +51,8 @@
             }
         },
         "EMBS Chapter": {
-            "Logo": ":medical_symbol:",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/813848519261552700.png?v=1",
+            "Logo": "<:embs:926019599911239741>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/926019599911239741.png?",
             "Description": "<Description>",
             "Private": "False",
             "Leaders": {
@@ -63,8 +63,8 @@
             }
         },
         "PES Chapter": {
-            "Logo": ":zap:",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/813848518468304956.png?v=1",
+            "Logo": "<:pes:926019600469069844>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/926019600469069844.png?",
             "Description": "The Power and Energy Society is a hub for students interested in the bulk electric system, energy generation, bulk equipment, power electronics, etc. We organize workshops aimed towards these interests and hope to network and create a social community!",
             "Private": "False",
             "Leaders": {
@@ -85,8 +85,8 @@
     },
     "Committee": {
         "Discord Committee": {
-            "Logo": "<:discord:776205209046482995>",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/776205209046482995.png?v=1",
+            "Logo": "<:discord:925960375978061934>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/925960375978061934.png?",
             "Group": "Committee",
             "Description": "The Discord Committee works mostly on programming the  <@!766060781383974913>, used to help manage information about the IEEE McMaster Student Branch. Using Python and the Discord API, beginner to novice programmers have the opportunity to learn how to read API documentation and implement them into their code, as well as learning how to upload code into GitHub. Additional responsibilities include: moderating the server and assisting new users on how to use Discord and/or <@!766060781383974913>.",
             "Private": "False",
@@ -98,8 +98,8 @@
             }
         },
         "Social Committee": {
-            "Logo": "<:social:776205198371979325>",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/776205198371979325.png?v=1",
+            "Logo": "<:social:925960375571193928>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/925960375571193928.png?",
             "Description": "The social committee plans and organizes social events within the IEEE-SB to engage and connect members.",
             "Private": "False",
             "Leaders": {
@@ -110,8 +110,8 @@
             }
         },
         "Website Committee": {
-            "Logo": "<:website:776205187349086290>",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/776205187349086290.png?v=1",
+            "Logo": "<:website:925960375487311872>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/925960375487311872.png?",
             "Description": "The website committee is responsible for the creation and upkeep of the McMaster IEEE Student Branch's website. The website serves as a collaborative effort from all committees of the IEEE Student Branch, as it will be used to advertise information collection from throughout the student branch. Members of the website committee specifically, will have the chance to learn or consolidate their website building and maintenance skills.",
             "Private": "False",
             "Leaders": {
@@ -122,8 +122,8 @@
             }
         },
         "Public Relations Committee": {
-            "Logo": "<:workshop:776205171130368061>",
-            "Thumbnail": "https://cdn.discordapp.com/emojis/776205171130368061.png?v=1",
+            "Logo": "<:pr:925960375541846037>",
+            "Thumbnail": "https://cdn.discordapp.com/emojis/925960375541846037.png?",
             "Description": "The Public Relations committee is committed to growing the McMaster IEEE Student Branch network, including students, alumni, and companies. With creative designs, merchandise, and regular activity on social media, we are able to engage with students to create interest in upcoming events and our club. Furthermore, we actively pursue sponsorships to build relationships with companies and to bring even more interesting events.",
             "Private": "False",
             "Leaders": {

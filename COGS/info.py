@@ -190,7 +190,7 @@ class Info(commands.Cog, description="Info :scroll:"):
             num_groups = 0
             group_list = ""
             for group in self.roles_list[branch]:
-                group_list += f"> {group}  {self.roles_list[branch][group]['Logo']}\n"
+                group_list += f"> {self.roles_list[branch][group]['Logo']}  {group}\n"
                 num_groups += 1
             groups_embed = discord.Embed(title=f"List of {branch}s", description=group_list, colour=0X2072AA)
             groups_embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
