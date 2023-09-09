@@ -7,19 +7,19 @@
             "Private": "True",
             "Leaders": {
                 "Chair": {
-                    "DiscordID": "155514980941168641, 270663652644880385",
+                    "DiscordID": "516666801070014464",
                     "Description": "<Description>"
                 },
                 "Vice-Chair": {
-                    "DiscordID": "625104878301216771",
+                    "DiscordID": "613520663314956299, 364950646723575819",
                     "Description": "<Description>"
                 },
                 "Secretary": {
-                    "DiscordID": "406986134422421506",
+                    "DiscordID": "None",
                     "Description": "<Description>"
                 },
                 "Treasurer": {
-                    "DiscordID": "235550179867099136",
+                    "DiscordID": "436331906548891658",
                     "Description": "<Description>"
                 },
                 "Mentor": {
@@ -37,15 +37,15 @@
             "Private": "False",
             "Leaders": {
                 "Chair": {
-                    "DiscordID": "378197941128527877",
-                    "Description": "Corbin"
+                    "DiscordID": "235172812501811200",
+                    "Description": "<Description>"
                 },
                 "Vice-Chairs": {
-                    "DiscordID": "EMPTY",
+                    "DiscordID": "638383667802013697, 696386024233762825",
                     "Description": "<Description>"
                 },
                 "Secretary": {
-                    "DiscordID": "406986134422421506",
+                    "DiscordID": "587355533367967769",
                     "Description": "<Description>"
                 }
             }
@@ -53,11 +53,19 @@
         "EMBS Chapter": {
             "Logo": "<:embs:926019599911239741>",
             "Thumbnail": "https://cdn.discordapp.com/emojis/926019599911239741.png?",
-            "Description": "We are your connection at McMaster to the world's largest society of biomedical engineers! We focus on the development and application of engineering concepts and methods to biology, medicine and health sciences to provide effective solutions to biological, medical and healthcare problems. We have a lot of events planned throughout the year to explore the discipline of biomedical engineering and its applications! These include biomedical club's fest, interns' night, startup spotlights, lecture series, round table conferences and more! You can expect to learn more about biomedical engineering, the application of engineering concepts in medicine and biology! We have a ton of events to help you network in the field as well! Meet fellow peers interested in the same field as you, meet industry professionals and LEARN!",
+            "Description": "<Description>",
             "Private": "False",
             "Leaders": {
                 "Chair": {
-                    "DiscordID": "723308841315336203",
+                    "DiscordID": "401591946336010250, 713790252434587679",
+                    "Description": "<Description>"
+                },
+                "Vice-Chairs": {
+                    "DiscordID": "None",
+                    "Description": "<Description>"
+                },
+                "Secretary": {
+                    "DiscordID": "None",
                     "Description": "<Description>"
                 }
             }
@@ -69,16 +77,16 @@
             "Private": "False",
             "Leaders": {
                 "Chair": {
-                    "DiscordID": "187716595320225793",
-                    "Description": "Edward is very kawaii"
+                    "DiscordID": "542479593656025113",
+                    "Description": "<Description>"
                 },
                 "Vice-Chair": {
-                    "DiscordID": "542479593656025113",
-                    "Description": "Evan is also very kawaii, but not as kawaii  as Edward"
+                    "DiscordID": "371020750783643651",
+                    "Description": "<Description>"
                 },
                 "Secretary": {
-                    "DiscordID": "688852437368701058",
-                    "Description": "Saff recently became kawaii"
+                    "DiscordID": "748950313221881979",
+                    "Description": "<Description>"
                 }
             }
         }
@@ -116,7 +124,7 @@
             "Private": "False",
             "Leaders": {
                 "WebMaster": {
-                    "DiscordID": "124318616308023296",
+                    "DiscordID": "None",
                     "Description": "<Description>"
                 }
             }
@@ -128,11 +136,11 @@
             "Private": "False",
             "Leaders": {
                 "Internal Head": {
-                    "DiscordID": "704598823905001542",
+                    "DiscordID": "None",
                     "Description": "<Description>"
                 },
                 "External Head": {
-                    "DiscordID": "Chitra Nookala",
+                    "DiscordID": "None",
                     "Description": "<Description>"
                 }
             }
