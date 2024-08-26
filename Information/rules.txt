@@ -1,6 +1,6 @@
 **IEEE McMaster Student Branch Discord Server Official Rules:**
 ```
-1. Discord participants must follow the McMaster Student Code of Conduct. Each student and participant is held accountable for following the Student Code of Conduct and the respective terms of uses. IEEE will not tolerate discussions of illegal or immoral activities/topics.
+1. Discord participants must follow the McMaster Student Code of Conduct (https://secretariat.mcmaster.ca/app/uploads/Code-of-Student-Rights-and-Responsibilities.pdf) . Each student and participant is held accountable for following the Student Code of Conduct and the respective terms of uses. IEEE will not tolerate discussions of illegal or immoral activities/topics.
 
 2. Be respectful and open-minded to your fellow members of the IEEE community at all in-person, online activities, and Discord activities.
 
@@ -8,7 +8,9 @@
 
 4. No NSFW or overly suggestive content in the form of any medium.
 
-5. Be mindful of using the appropriate voice and text channels when communicating with your fellow members
+5. Be mindful of using the appropriate voice and text channels when communicating with your fellow members. Use threads for conversations that will involve a lot of back forth commentary.
 
-6. By joining the Discord server, you are acknowledging and accepting the server rules and consequences. These server rules are open to change and it is the responsibility of the member to stay updated. If at any point you feel uncomfortable with any messages/images posted, please contact any @Exec member.
+6. Event advertisments require the permission of an executive. To protect students from fraud, sales advertisments are strictly forbidden, unless the exchange is made in ITB-141 and no personal information is shared.
+
+7. By joining the Discord server, you are acknowledging and accepting the server rules and consequences. These server rules are open to change and it is the responsibility of the member to stay updated. If at any point you feel uncomfortable with any messages/images posted, please contact any @Exec member.
 ```
