@@ -4,6 +4,8 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 import json
+import csv
+import random
 from COGS.info import Info
 
 
@@ -11,30 +13,33 @@ class ClubActivities(commands.Cog, description="Club Activities  <:fireball:9259
     def __init__(self, client):
         self.client = client
         self.info = Info(self.client)
+        with open(r"Information/pokemoves.csv", "r") as file:
+            pokemoves = csv.reader(file)
+            self.pokemoves = list(pokemoves)[1:]
 
-    @app_commands.command(name="profile", description="View your profile or the profile of your victim")
-    @app_commands.describe(victim="To target a victim for their profile, use @ mentions")
-    async def profile(self, ctx, victim: str = ""):
+    @app_commands.command(name="profile", description="View your profile or the profile of your target")
+    @app_commands.describe(target="To target a target for their profile, use @ mentions")
+    async def profile(self, ctx, target: discord.User = None):
         with open("users.json", "r") as file:
             self.info.users = json.load(file)
 
-        # Call self's profile or a victim's?
+        # Call self's profile or a target's?
         user = None
-        if victim:
-            victim = victim.strip()
-            if victim.startswith("<@!") and victim.endswith(">"):
-                victim = victim[3:-1]
+        if target:
+            target = target.strip()
+            if target.startswith("<@!") and target.endswith(">"):
+                target = target[3:-1]
 
             for v in ctx.guild.members:
-                if victim.lower() in str(v.nick).lower() or victim.lower() in str(v.name).lower()\
-                        or victim in str(v.id):
-                    victim: discord.member = v
+                if target.lower() in str(v.nick).lower() or target.lower() in str(v.name).lower()\
+                        or target in str(v.id):
+                    target: discord.member = v
                     break
             try:
-                if str(victim.id) in self.info.users:
-                    user: discord.member = victim
+                if str(target.id) in self.info.users:
+                    user: discord.member = target
                 else:
-                    await ctx.response.send_message(f"{victim} hasn't registered yet!")
+                    await ctx.response.send_message(f"{target} hasn't registered yet!")
             except AttributeError:
                 await ctx.response.send_message(
                     "The user you are trying to find cannot be found. Please try mentioning them directly.")
@@ -43,7 +48,7 @@ class ClubActivities(commands.Cog, description="Club Activities  <:fireball:9259
                 user: discord.member = ctx.user
             else:
                 await ctx.response.send_message(
-                    f"Hey {ctx.user.mention}, you haven't registered yet! Type `-register` to get started")
+                    f"Hey {ctx.user.mention}, you haven't registered yet! Type `/register` to get started")
 
         user: discord.member
         if user:
@@ -81,13 +86,26 @@ class ClubActivities(commands.Cog, description="Club Activities  <:fireball:9259
                                     inline=False)
             await ctx.response.send_message(embed=profile_embed)
 
-    @app_commands.command(name="kill", description="Puts an engineer out of their misery")
-    @app_commands.describe(victim="To target a victim to relieve, use @ mentions")
-    async def kill(self, ctx, victim: discord.User = None):
-        if victim and ctx.user != victim:
-            await ctx.response.send_message(f"{ctx.user.mention} killed {victim.mention}")
+    @app_commands.command(name="pokemon", description="Start a Pokémon battle with someone!")
+    @app_commands.describe(target="To target your moves on someone, use @ mentions")
+    async def pokemon(self, ctx, target: discord.User = None):
+        pokemoves = self.pokemoves
+        random.shuffle(pokemoves)
+        pokemoves
+        supereff = random.randint(1,24)
+        crit = random.randint(1,24)
+        if supereff == 24:
+            supereff = "\nIt's super effective!"
         else:
-            await ctx.response.send_message(f"{ctx.user.mention} killed themself")
+            supereff = ""
+        if crit == 24:
+            crit = "\nCritical hit!"
+        else:
+            crit = ""
+        if target and ctx.user != target:
+            await ctx.response.send_message(f"{ctx.user.mention} used {pokemoves[1][1]} on {target.mention}!{supereff}{crit}")
+        else:
+            await ctx.response.send_message(f"{ctx.user.mention} used Self-Destruct!{supereff}{crit}")
 
 
 async def setup(client):
